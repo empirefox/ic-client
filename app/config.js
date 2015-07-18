@@ -18,14 +18,14 @@ System.config({
 
 System.config({
   "map": {
-    "angular": "github:angular/bower-angular@1.4.1",
-    "babel": "npm:babel-core@5.6.7",
-    "babel-runtime": "npm:babel-runtime@5.6.7",
+    "angular": "github:angular/bower-angular@1.4.3",
+    "babel": "npm:babel-core@5.6.15",
+    "babel-runtime": "npm:babel-runtime@5.6.15",
     "core-js": "npm:core-js@0.9.18",
     "github:jspm/nodelibs-process@0.1.1": {
       "process": "npm:process@0.10.1"
     },
-    "npm:babel-runtime@5.6.7": {
+    "npm:babel-runtime@5.6.15": {
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
     "npm:core-js@0.9.18": {
@@ -35,4 +35,3 @@ System.config({
     }
   }
 });
-

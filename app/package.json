@@ -1,16 +1,16 @@
 {
-  "name": "electron-boilerplate",
-  "productName": "Electron Boilerplate",
+  "name": "electron-angular",
+  "productName": "Electron Angular Boilerplate",
   "identifier": "com.example.electron-boilerplate",
   "description": "A boilerplate for build desktop apps using electron with Babel, Jspm, Gulp, and Angular. ",
   "version": "1.0.0",
-  "author": "Yail Peralta <yailpz@hotmail.com>",
+  "author": "empirefox <empirefox@gmain.com>",
   "main": "main.js",
   "config": {
     "target": "development"
   },
   "dependencies": {
-    "fs-jetpack": "^0.6.4",
+    "fs-jetpack": "^0.6.5",
     "pouchdb": "^3.6.0"
   }
 }
