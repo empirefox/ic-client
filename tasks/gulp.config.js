@@ -7,7 +7,13 @@ module.exports = function() {
   var config = {
 
     jsCodeToTranspile: [
-      'app/**/*.es6.js',
+        'app/**/*.js',
+        '!app/main.js',
+        '!app/spec.js',
+        '!app/node_modules/**',
+        '!app/jspm_packages/**',
+        '!app/bower_components/**',
+        '!app/vendor/**'
     ],
 
     toCopy: [

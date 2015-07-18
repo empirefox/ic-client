@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Electron Boilerplate</title>
@@ -11,22 +12,26 @@
     <script src="vendor/electron_boilerplate/external_links.js"></script>
 
 </head>
+
 <body>
 
     <div class="container">
-        <div ng-controller="AppController as appCtrl">
-            <p>You're running Electron version
-                <span ng-bind="appCtrl.electronVersion"></span>
-            </p>
-        </div>
+        <app-version></app-version>
     </div>
 
     <script src="jspm_packages/system.src.js"></script>
     <script src="config.js"></script>
     <script>
-        System.import('./app').then(function (app) {
-            app.init();
-        }).catch(console.error.bind(console))
+        System.config({
+            defaultJSExtensions: true
+        });
+        Promise.all([
+            System.import('reflect-metadata'),
+            System.import('zone.js')
+        ]).then(function() {
+            return System.import('components/appVersion/appVersion').catch(console.log.bind(console));
+        });
     </script>
 </body>
+
 </html>
