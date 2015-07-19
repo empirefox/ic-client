@@ -1,5 +1,6 @@
-import {Component, View, bootstrap} from 'angular2/angular2';
+import {Component, View, NgZone, bootstrap} from 'angular2/angular2';
 import {NgSwitch, NgSwitchWhen} from 'angular2/directives';
+import {Inject} from 'angular2/di';
 
 import {NotRunning} from 'components/notRunning/notRunning';
 import {NoConnection} from 'components/noConnection/noConnection';
@@ -9,20 +10,23 @@ import {Running} from 'components/running/running';
 var ipc = require('ipc');
 
 @Component({
-  selector: 'status'
+  selector: 'status',
+  appInjector: [NgZone],
 })
 
 @View({
   templateUrl: 'components/status/status.html',
-  directives: [NgSwitch, NgSwitchWhen, NotRunning, NoConnection, AuthErr, Running]
+  directives: [NgSwitch, NgSwitchWhen, NotRunning, NoConnection, AuthErr, Running],
 })
 
 export class Status {
-  constructor() {
+  constructor(@Inject(NgZone) zone) {
     this.roomStatus = 'auth-err';
     ipc.on('room-status', (s) => {
-      console.log('from main process:', s);
-      this.roomStatus = s;
+      zone.run(() => {
+        console.log('from main process:', s);
+        this.roomStatus = s;
+      });
     });
   }
 }

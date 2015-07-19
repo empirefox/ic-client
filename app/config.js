@@ -16,6 +16,7 @@ System.config({
 System.config({
   "map": {
     "angular2": "npm:angular2@2.0.0-alpha.31",
+    "immutable": "npm:immutable@3.7.4",
     "reflect-metadata": "npm:reflect-metadata@0.1.0",
     "rx": "npm:rx@2.5.1",
     "traceur": "github:jmcriffey/bower-traceur@0.0.90",
