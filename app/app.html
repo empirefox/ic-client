@@ -2,36 +2,37 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>Electron Boilerplate</title>
+  <meta charset="utf-8">
+  <title>Electron Boilerplate</title>
 
-    <link href="./stylesheets/main.css" rel="stylesheet" type="text/css">
+  <link href="./stylesheets/main.css" rel="stylesheet" type="text/css">
 
-    <script src="vendor/electron_boilerplate/env_config.js"></script>
-    <script src="vendor/electron_boilerplate/context_menu.js"></script>
-    <script src="vendor/electron_boilerplate/external_links.js"></script>
+  <script src="vendor/electron_boilerplate/env_config.js"></script>
+  <script src="vendor/electron_boilerplate/context_menu.js"></script>
+  <script src="vendor/electron_boilerplate/external_links.js"></script>
 
 </head>
 
 <body>
 
-    <div class="container">
-        <app-version></app-version>
-    </div>
+  <div class="container">
+    <status></status>
+  </div>
 
-    <script src="jspm_packages/system.src.js"></script>
-    <script src="config.js"></script>
-    <script>
-        System.config({
-            defaultJSExtensions: true
-        });
-        Promise.all([
-            System.import('reflect-metadata'),
-            System.import('zone.js')
-        ]).then(function() {
-            return System.import('components/appVersion/appVersion').catch(console.log.bind(console));
-        });
-    </script>
+  <script src="jspm_packages/system.src.js"></script>
+  <script src="config.js"></script>
+  <script>
+    System.config({
+      defaultJSExtensions: true
+    });
+    Promise.all([
+      System.import('reflect-metadata'),
+      System.import('rx'),
+      System.import('zone.js')
+    ]).then(function () {
+      return System.import('components/status/status').catch(console.log.bind(console));
+    });
+  </script>
 </body>
 
 </html>

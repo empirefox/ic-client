@@ -1,0 +1,14 @@
+<div [ng-switch]="roomStatus">
+  <template [ng-switch-when]="'not-running'">
+    <not-running></not-running>
+  </template>
+  <template [ng-switch-when]="'no-connection'">
+    <no-connection></no-connection>
+  </template>
+  <template [ng-switch-when]="'auth-err'">
+    <auth-err></auth-err>
+  </template>
+  <template [ng-switch-when]="'running'">
+    <running></running>
+  </template>
+</div>

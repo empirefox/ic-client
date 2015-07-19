@@ -37,6 +37,7 @@
     "dependencies": {
       "angular2": "npm:angular2@^2.0.0-alpha.31",
       "reflect-metadata": "npm:reflect-metadata@^0.1.0",
+      "rx": "npm:rx@2.5.1",
       "zone.js": "npm:zone.js@^0.5.2"
     },
     "devDependencies": {

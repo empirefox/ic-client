@@ -17,6 +17,7 @@ System.config({
   "map": {
     "angular2": "npm:angular2@2.0.0-alpha.31",
     "reflect-metadata": "npm:reflect-metadata@0.1.0",
+    "rx": "npm:rx@2.5.1",
     "traceur": "github:jmcriffey/bower-traceur@0.0.90",
     "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.90",
     "zone.js": "npm:zone.js@0.5.2",

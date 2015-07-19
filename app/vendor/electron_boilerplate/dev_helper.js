@@ -25,6 +25,30 @@ module.exports.setDevMenu = function () {
             click: function () {
                 app.quit();
             }
+        },{
+            label: 'Send not-running',
+            accelerator: 'CmdOrCtrl+1',
+            click: function () {
+              BrowserWindow.getFocusedWindow().webContents.send('room-status', 'not-running');
+            }
+        },{
+            label: 'Send no-connection',
+            accelerator: 'CmdOrCtrl+2',
+            click: function () {
+              BrowserWindow.getFocusedWindow().webContents.send('room-status', 'no-connection');
+            }
+        },{
+            label: 'Send auth-err',
+            accelerator: 'CmdOrCtrl+3',
+            click: function () {
+              BrowserWindow.getFocusedWindow().webContents.send('room-status', 'auth-err');
+            }
+        },{
+            label: 'Send running',
+            accelerator: 'CmdOrCtrl+4',
+            click: function () {
+              BrowserWindow.getFocusedWindow().webContents.send('room-status', 'running');
+            }
         }]
     }]);
     Menu.setApplicationMenu(devMenu);

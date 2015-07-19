@@ -10,35 +10,40 @@ var mainWindow;
 
 // Preserver of the window size and position between app launches.
 var mainWindowState = windowStateKeeper('main', {
-    width: 1000,
-    height: 600
+  width: 480,
+  height: 270
+});
+
+var ipc = require('ipc');
+ipc.on('asynchronous-message', function (event, arg1, arg2) {
+  console.log(arg1, arg2);
 });
 
 app.on('ready', function () {
 
-    mainWindow = new BrowserWindow({
-        x: mainWindowState.x,
-        y: mainWindowState.y,
-        width: mainWindowState.width,
-        height: mainWindowState.height
-    });
+  mainWindow = new BrowserWindow({
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height
+  });
 
-    if (mainWindowState.isMaximized) {
-        mainWindow.maximize();
-    }
+  if (mainWindowState.isMaximized) {
+    mainWindow.maximize();
+  }
 
-    mainWindow.loadUrl('file://' + __dirname + '/app.html');
+  mainWindow.loadUrl('file://' + __dirname + '/app.html');
 
-    if (env.name === 'development') {
-        devHelper.setDevMenu();
-        mainWindow.openDevTools();
-    }
+  if (env.name === 'development') {
+    devHelper.setDevMenu();
+    mainWindow.openDevTools();
+  }
 
-    mainWindow.on('close', function () {
-        mainWindowState.saveState(mainWindow);
-    });
+  mainWindow.on('close', function () {
+    mainWindowState.saveState(mainWindow);
+  });
 });
 
 app.on('window-all-closed', function () {
-    app.quit();
+  app.quit();
 });
