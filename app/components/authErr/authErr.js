@@ -1,10 +1,13 @@
 import {Component, View, bootstrap, NgIf}from 'angular2/angular2';
 import {formDirectives} from 'angular2/forms';
+import {Http, httpInjectables} from 'angular2/http';
+import {Inject} from 'angular2/di';
 
 var ipc = require('ipc');
 
 @Component({
   selector: 'auth-err',
+  appInjector: [httpInjectables],
 })
 
 @View({
@@ -13,13 +16,16 @@ var ipc = require('ipc');
 })
 
 export class AuthErr {
-  constructor() {
+  constructor(@Inject(Http) http) {
+    this.http = http;
   }
 
-  onRegRoom(value){
-    if(!value || !value.roomName){
+  onRegRoom(data){
+    if(!data || !data.roomName){
       return;
     }
-		ipc.send('asynchronous-message', 'reg-room', value);
+    this.http.post('https://icv3.luck2.me/many/reg-room', data)
+    .map(res => res.json().addr)
+    .subscribe(addr => ipc.send('reg-room', addr));
   }
 }

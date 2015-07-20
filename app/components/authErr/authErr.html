@@ -1,6 +1,6 @@
 <form #f="form" (submit)='onRegRoom(f.value)'>
   监控室名称
-  <input ng-control='roomName' type='text' placeholder='监控室名称, 如：后院'>
+  <input ng-control='name' type='text' placeholder='监控室名称, 如：后院'>
   <div *ng-if="!f.valid">名称不正确</div>
   <button type='submit'>注册监控室</button>
 </form>

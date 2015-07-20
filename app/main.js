@@ -1,6 +1,7 @@
 'use strict';
 
 var app = require('app');
+var ipc = require('ipc');
 var BrowserWindow = require('browser-window');
 var env = require('./vendor/electron_boilerplate/env_config');
 var devHelper = require('./vendor/electron_boilerplate/dev_helper');
@@ -14,12 +15,14 @@ var mainWindowState = windowStateKeeper('main', {
   height: 270
 });
 
-var ipc = require('ipc');
-ipc.on('asynchronous-message', function (event, arg1, arg2) {
-  console.log(arg1, arg2);
+ipc.on('reg-room', (event, addr) => {
+  console.log('reg-room with addr:', addr);
+});
+ipc.on('asynchronous-message', (event, arg) => {
+  console.log(arg);
 });
 
-app.on('ready', function () {
+app.on('ready', () => {
 
   mainWindow = new BrowserWindow({
     x: mainWindowState.x,
@@ -39,11 +42,7 @@ app.on('ready', function () {
     mainWindow.openDevTools();
   }
 
-  mainWindow.on('close', function () {
-    mainWindowState.saveState(mainWindow);
-  });
+  mainWindow.on('close', () => mainWindowState.saveState(mainWindow));
 });
 
-app.on('window-all-closed', function () {
-  app.quit();
-});
+app.on('window-all-closed', () => app.quit());
