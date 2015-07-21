@@ -21,10 +21,9 @@ var ipc = require('ipc');
 
 export class Status {
   constructor(@Inject(NgZone) zone) {
-    this.roomStatus = 'auth-err';
+    this.roomStatus = 'not-running';
     ipc.on('room-status', (s) => {
       zone.run(() => {
-        console.log('from main process:', s);
         this.roomStatus = s;
       });
     });

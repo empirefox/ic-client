@@ -1,13 +1,13 @@
-import {Component, View, bootstrap, NgIf}from 'angular2/angular2';
+import {Component, View, NgZone, bootstrap, NgIf}from 'angular2/angular2';
 import {formDirectives} from 'angular2/forms';
-import {Http, httpInjectables} from 'angular2/http';
 import {Inject} from 'angular2/di';
+import {parseReg} from 'services/path';
 
 var ipc = require('ipc');
 
 @Component({
   selector: 'auth-err',
-  appInjector: [httpInjectables],
+  appInjector: [NgZone],
 })
 
 @View({
@@ -16,16 +16,61 @@ var ipc = require('ipc');
 })
 
 export class AuthErr {
-  constructor(@Inject(Http) http) {
-    this.http = http;
+  constructor(@Inject(NgZone) zone) {
+    this.webview = document.getElementById("regview");
+    this.src = ipc.sendSync('get-reg-room-url') || '';
+    this.finalSrc = this.src.replace(/\/login\.html\?from=/gi, '');
+    this.webview.src = this.src;
+
+    this.webview.addEventListener('ipc-message', (event) => {
+      console.log('from webview:', event);
+      switch (event.channel) {
+      case 'addr':
+        ipc.send('reg-room-ok', event.args[0]);
+        break;
+      case 'reg-page-ready':
+        zone.run(() => this.regPageReady = true);
+        break;
+      case 'reg-page-not-ready':
+        zone.run(() => this.regPageReady = false);
+        break;
+      case 'error':
+        console.log(event.args[0]);
+        break;
+      }
+    });
+
+    this.webview.addEventListener('did-get-redirect-request', (event) => {
+      this.webview.src = event.newUrl;
+      if (event.newUrl === this.finalSrc) {
+        console.log('node');
+        this.webview.nodeintegration = 'true';
+        // this.webview.preload = './components/authErr/reg-room.js';
+      }
+    });
+
+    this.webview.addEventListener('did-get-response-details', (event) => {
+      if (event.referrer === this.src && event.newUrl === this.finalSrc) {
+        console.log('node');
+        this.webview.src = event.newUrl;
+        this.webview.nodeintegration = 'true';
+        // this.webview.preload = './components/authErr/reg-room.js';
+      }
+    });
+
+    ipc.on('reg-room-url-change', (url) => {
+      if (this.src !== url) {
+        this.webview.src = url;
+        this.src = url;
+        this.finalSrc = this.src.replace(/\/login\.html\?from=/gi, '');
+      }
+    });
   }
 
-  onRegRoom(data){
-    if(!data || !data.roomName){
+  onRegRoom(data) {
+    if (!this.regPageReady || !data || !data.name) {
       return;
     }
-    this.http.post('https://icv3.luck2.me/many/reg-room', data)
-    .map(res => res.json().addr)
-    .subscribe(addr => ipc.send('reg-room', addr));
+    this.webview.executeJavaScript(`RegRoom("${data.name}")`);
   }
 }

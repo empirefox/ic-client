@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "fs-jetpack": "^0.6.5",
-    "pouchdb": "^3.6.0"
+    "pouchdb": "^3.6.0",
+    "ws": "^0.7.2"
   }
 }
