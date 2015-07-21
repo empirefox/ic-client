@@ -1,4 +1,7 @@
 <div [ng-switch]="roomStatus">
+  <template [ng-switch-when]="'ws-opened'">
+    <ws-opened></ws-opened>
+  </template>
   <template [ng-switch-when]="'not-running'">
     <not-running></not-running>
   </template>

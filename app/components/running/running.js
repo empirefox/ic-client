@@ -1,4 +1,4 @@
-import {Component, View, bootstrap} from 'angular2/angular2';
+import {Component, View} from 'angular2/angular2';
 
 var ipc = require('ipc');
 
@@ -15,6 +15,6 @@ export class Running {
   }
 
   remove() {
-		ipc.send('asynchronous-message', 'remove-room');
+		ipc.send('remove-room');
   }
 }

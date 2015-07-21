@@ -11,6 +11,7 @@ var jetpack = require('fs-jetpack');
 // own modules
 var utils = require('./utils');
 var config = require('./gulp.config')();
+var roomConfig = require('./room.config')();
 
 var projectDir = jetpack;
 var srcDir = projectDir.cwd('./app');
@@ -101,6 +102,23 @@ gulp.task('watch', function () {
   gulp.watch(config.jsCodeToTranspile, ['transpile-watch']);
   gulp.watch(config.toCopy, ['copy-watch']);
   gulp.watch('app/**/*.styl', ['stylus-watch']);
+});
+
+gulp.task('copyRoomConfig', function () {
+  var cfile = roomConfig.initConf;
+  switch (utils.getEnvName()) {
+  case 'development':
+  case 'test':
+    cfile = roomConfig[utils.os()].testConf;
+    break;
+  }
+  return gulp.src(cfile).pipe($.rename('config.toml')).pipe(gulp.dest(roomConfig.electron));
+});
+
+gulp.task('copyRoom', ['copyRoomConfig'], function () {
+  return gulp.src(roomConfig[utils.os()].bin).pipe($.rename({
+    basename: roomConfig.name,
+  })).pipe(gulp.dest(roomConfig.electron));
 });
 
 gulp.task('build', ['transpile', 'stylus', 'copy', 'finalize']);

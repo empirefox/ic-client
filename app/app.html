@@ -14,8 +14,9 @@
 </head>
 
 <body>
+  <navbar class="navbar"></navbar>
   <div class="container">
-    <status></status>
+    <status class="row"></status>
   </div>
 
   <script src="jspm_packages/system.src.js"></script>
@@ -29,7 +30,10 @@
       System.import('rx'),
       System.import('zone.js')
     ]).then(function () {
-      return System.import('components/status/status').catch(console.log.bind(console));
+      return Promise.all([
+        System.import('components/status/status'),
+        System.import('components/navbar/navbar')
+      ]).catch(console.log.bind(console));
     });
   </script>
 </body>

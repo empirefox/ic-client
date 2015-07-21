@@ -27,6 +27,7 @@ export class Status {
         this.roomStatus = s;
       });
     });
+    ipc.send('get-status');
   }
 }
 

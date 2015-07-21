@@ -1,4 +1,4 @@
-import {Component, View, NgZone, bootstrap, NgIf}from 'angular2/angular2';
+import {Component, View, NgZone, NgIf}from 'angular2/angular2';
 import {formDirectives} from 'angular2/forms';
 import {Inject} from 'angular2/di';
 import {parseReg} from 'services/path';

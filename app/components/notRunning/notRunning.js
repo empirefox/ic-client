@@ -1,4 +1,4 @@
-import {Component, View, bootstrap} from 'angular2/angular2';
+import {Component, View} from 'angular2/angular2';
 
 var ipc = require('ipc');
 
@@ -15,6 +15,6 @@ export class NotRunning {
   }
 
   start(){
-    ipc.send('asynchronous-message', 'start-room');
+    ipc.send('start-room');
   }
 }
