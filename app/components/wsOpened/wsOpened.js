@@ -3,7 +3,7 @@ import {Component, View} from 'angular2/angular2';
 var ipc = require('ipc');
 
 @Component({
-  selector: 'wsOpened'
+  selector: 'ws-opened'
 })
 
 @View({

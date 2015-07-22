@@ -1,5 +1,6 @@
 'use strict';
 
+var kill = require('tree-kill');
 var path = require('path');
 var app = require('app');
 var ipc = require('ipc');
@@ -17,9 +18,9 @@ global.window = {};
 var ws = require('rc-socket.js');
 
 var mainWindow;
-var regRoomUrl;
 var conn;
-var isQuit;
+var roomInfo;
+var isFinish;
 
 function sendToWindow(channel, msg) {
   if (mainWindow) {
@@ -40,20 +41,20 @@ function sendToRoom(msg) {
 }
 
 function quit(type) {
-  isQuit = true;
+  isFinish = true;
+  app.quit();
+  if (type === 'Exit' && roomInfo && roomInfo.pid) {
+    kill(roomInfo.pid, 'SIGTERM');
+  }
   sendToRoom({
     type: type,
   });
-  if (!conn || conn.readyState === WebSocket.CLOSING || conn.readyState === WebSocket.CLOSED) {
-    conn.close();
-    app.quit();
-    return;
-  }
   setTimeout(function () {
     if (conn) {
       conn.close();
     }
-  }, 200);
+    process.exit();
+  }, 500);
 }
 
 function startRoom() {
@@ -67,6 +68,9 @@ function onRoomStaus(status) {
   switch (status) {
   case 'unreachable':
     sendToWindow('room-status', 'no-connection');
+    break;
+  case 'authing':
+    sendToWindow('room-status', 'authing');
     break;
   case 'not_authed':
     sendToWindow('room-status', 'auth-err');
@@ -98,21 +102,20 @@ try {
     console.log('onopen');
     sendToWindow('room-status', 'ws-opened');
     sendToRoom({
-      type: 'GetRegRoomUrl',
+      type: 'GetRoomInfo',
     });
   };
   conn.onclose = function () {
     console.log('onclose');
-    if (isQuit) {
-      app.quit();
-      conn.close();
-      process.exit();
-    } else {
-      sendToWindow('room-status', 'not-running');
-    }
+    sendToWindow('room-status', 'not-running');
   };
   conn.onerror = function (error) {
     console.log('onerror:', error);
+    if (!isFinish) {
+      setTimeout(function () {
+        conn.connect();
+      }, 5e3);
+    }
   };
   conn.onmessage = function (e) {
     console.log('onemessage:', e.data);
@@ -121,9 +124,8 @@ try {
     case 'Status':
       onRoomStaus(statusObj.content);
       break;
-    case 'RegRoomUrl':
-      regRoomUrl = statusObj.content;
-      sendToWindow('reg-room-url-change', regRoomUrl);
+    case 'RoomInfo':
+      roomInfo = statusObj.content;
       break;
     default:
       console.log('unknow message', statusObj);
@@ -139,10 +141,6 @@ ipc.on('reg-room-ok', function (event, addr) {
     type: 'SetSecretAddress',
     content: addr,
   });
-});
-// used by authErr sync return value
-ipc.on('get-reg-room-url', function (event) {
-  event.returnValue = regRoomUrl;
 });
 // used by notRunning
 ipc.on('start-room', function () {
@@ -161,7 +159,7 @@ ipc.on('get-status', function () {
   });
 });
 // used by navbar
-ipc.on('quit', function () {
+ipc.on('term', function () {
   quit('Exit');
 });
 // used by navbar

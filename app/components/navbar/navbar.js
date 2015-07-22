@@ -13,8 +13,8 @@ var ipc = require('ipc');
 export class Navbar {
   constructor() {}
 
-  quit() {
-    ipc.send('quit');
+  term() {
+    ipc.send('term');
   }
 
   close() {

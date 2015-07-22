@@ -5,6 +5,7 @@ import {parseReg} from 'services/path';
 import {Reging} from 'components/reging/reging';
 
 var ipc = require('ipc');
+var env = require('./env_config');
 
 @Component({
   selector: 'auth-err',
@@ -20,7 +21,7 @@ export class AuthErr {
   constructor(@Inject(NgZone) zone) {
     this.reging = false;
     this.webview = document.getElementById("regview");
-    this.src = ipc.sendSync('get-reg-room-url') || '';
+    this.src = env.roomHost + '/login.html?from=/regroom.html';
     this.finalSrc = this.src.replace(/\/login\.html\?from=/gi, '');
     this.webview.src = this.src;
 
@@ -48,7 +49,6 @@ export class AuthErr {
       if (event.newUrl === this.finalSrc) {
         console.log('node');
         this.webview.nodeintegration = 'true';
-        // this.webview.preload = './components/authErr/reg-room.js';
       }
     });
 
@@ -57,15 +57,6 @@ export class AuthErr {
         console.log('node');
         this.webview.src = event.newUrl;
         this.webview.nodeintegration = 'true';
-        // this.webview.preload = './components/authErr/reg-room.js';
-      }
-    });
-
-    ipc.on('reg-room-url-change', (url) => {
-      if (this.src !== url) {
-        this.webview.src = url;
-        this.src = url;
-        this.finalSrc = this.src.replace(/\/login\.html\?from=/gi, '');
       }
     });
   }
