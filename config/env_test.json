@@ -1,4 +1,5 @@
 {
   "name": "test",
+  "roomHost": "http://127.0.0.1:9999",
   "description": "Add here any environment specific stuff you like."
 }

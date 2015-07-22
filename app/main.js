@@ -18,7 +18,7 @@ var ws = require('rc-socket.js');
 
 var mainWindow;
 var regRoomUrl;
-var connection;
+var conn;
 var isQuit;
 
 function sendToWindow(channel, msg) {
@@ -29,27 +29,31 @@ function sendToWindow(channel, msg) {
 }
 
 function sendToRoom(msg) {
-  if (connection) {
+  if (conn) {
     console.log('sendToRoom', msg);
-    connection.send(JSON.stringify(msg));
+    try {
+      conn.send(JSON.stringify(msg));
+    } catch (e) {
+      console.log('sendToRoom err:', e);
+    }
   }
 }
 
-function quit() {
+function quit(type) {
   isQuit = true;
   sendToRoom({
-    type: 'Exit',
+    type: type,
   });
-  if (connection.readyState === WebSocket.CLOSING || connection.readyState === WebSocket.CLOSED) {
+  if (!conn || conn.readyState === WebSocket.CLOSING || conn.readyState === WebSocket.CLOSED) {
+    conn.close();
     app.quit();
+    return;
   }
-}
-
-function close() {
-  if (connection) {
-    connection.close();
-  }
-  app.quit();
+  setTimeout(function () {
+    if (conn) {
+      conn.close();
+    }
+  }, 200);
 }
 
 function startRoom() {
@@ -76,35 +80,41 @@ function onRoomStaus(status) {
   case 'ready':
     sendToWindow('room-status', 'running');
     break;
+  case 'removing':
+    sendToWindow('room-status', 'removing');
+    break;
   default:
     console.log(status);
   }
 }
 
 try {
-  // TODO insecure adpated protocols => lower ws options
-  connection = new ws('ws://127.0.0.1:12301/register', {
-    origin: 'http://127.0.0.1:9999',
+  // TODO insecure adpated protocols => ws options
+  conn = new ws('ws://127.0.0.1:12301/register', {
+    origin: env.roomHost,
   });
-  connection.binaryType = 'arraybuffer';
-  connection.onopen = function () {
+  conn.binaryType = 'arraybuffer';
+  conn.onopen = function () {
     console.log('onopen');
     sendToWindow('room-status', 'ws-opened');
     sendToRoom({
       type: 'GetRegRoomUrl',
     });
   };
-  connection.onclose = function () {
+  conn.onclose = function () {
     console.log('onclose');
     if (isQuit) {
       app.quit();
+      conn.close();
+      process.exit();
+    } else {
+      sendToWindow('room-status', 'not-running');
     }
-    sendToWindow('room-status', 'not-running');
   };
-  connection.onerror = function (error) {
+  conn.onerror = function (error) {
     console.log('onerror:', error);
   };
-  connection.onmessage = function (e) {
+  conn.onmessage = function (e) {
     console.log('onemessage:', e.data);
     let statusObj = JSON.parse(e.data);
     switch (statusObj.type) {
@@ -152,11 +162,11 @@ ipc.on('get-status', function () {
 });
 // used by navbar
 ipc.on('quit', function () {
-  quit();
+  quit('Exit');
 });
 // used by navbar
 ipc.on('close', function () {
-  close();
+  quit('Close');
 });
 
 // Preserver of the window size and position between app launches.
@@ -195,5 +205,5 @@ app.on('ready', function () {
 });
 
 app.on('window-all-closed', function () {
-  close();
+  quit('Close');
 });

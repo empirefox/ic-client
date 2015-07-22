@@ -1,13 +1,18 @@
-<form #f="form" (submit)='onRegRoom(f.value)' *ng-if="regPageReady">
-  监控室名称
-  <input ng-control='name' type='text' placeholder='监控室名称, 如：后院'>
-  <div *ng-if="!f.valid">名称不正确</div>
-  <button [disabled]="!regPageReady" type='submit'>注册监控室</button>
-</form>
-<h4>本地监控室已运行, 但注册信息错误<span *ng-if="!regPageReady">, 请先登录...</span></h4>
+<div *ng-if="!reging">
+  <form #f="form" (submit)='onRegRoom(f.value)' *ng-if="regPageReady">
+    监控室名称
+    <input ng-control='name' type='text' placeholder='监控室名称, 如：后院'>
+    <div *ng-if="!f.valid">名称不正确</div>
+    <button [disabled]="!regPageReady" type='submit'>注册监控室</button>
+  </form>
+  <h4>本地监控室已运行, 但注册信息错误
+    <span *ng-if="!regPageReady">, 请先登录...</span>
+  </h4>
+</div>
+<reging *ng-if="reging"></reging>
 
 <!-- <webview id="regview" src="http://127.0.0.1:9999/login.html?from=/regroom.html" style="width:100%;height:500px"></webview>
-<webview id="regview" src="https://icv3.luck2.me/login.html?from=/regroom.html" style="width:100%;height:500px"></webview> 
+<webview id="regview" src="https://icv3.luck2.me/login.html?from=/regroom.html" style="width:100%;height:500px"></webview>
 see https://github.com/atom/electron/issues/1133
 -->
 <webview id="regview" style="width:100%;height:500px" preload="./components/authErr/del.js" nodeintegration></webview>

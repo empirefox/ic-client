@@ -6,6 +6,7 @@ import {NotRunning} from 'components/notRunning/notRunning';
 import {NoConnection} from 'components/noConnection/noConnection';
 import {AuthErr} from 'components/authErr/authErr';
 import {Running} from 'components/running/running';
+import {Removing} from 'components/removing/removing';
 
 var ipc = require('ipc');
 
@@ -16,7 +17,7 @@ var ipc = require('ipc');
 
 @View({
   templateUrl: 'components/status/status.html',
-  directives: [NgSwitch, NgSwitchWhen, NotRunning, NoConnection, AuthErr, Running],
+  directives: [NgSwitch, NgSwitchWhen, NotRunning, NoConnection, AuthErr, Running, Removing],
 })
 
 export class Status {

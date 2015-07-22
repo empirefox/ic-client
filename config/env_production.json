@@ -1,4 +1,5 @@
 {
   "name": "production",
+  "roomHost": "https://icv3.luck2.me:8443",
   "description": "Add here any environment specific stuff you like."
 }

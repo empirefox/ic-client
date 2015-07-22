@@ -2,6 +2,7 @@ import {Component, View, NgZone, NgIf}from 'angular2/angular2';
 import {formDirectives} from 'angular2/forms';
 import {Inject} from 'angular2/di';
 import {parseReg} from 'services/path';
+import {Reging} from 'components/reging/reging';
 
 var ipc = require('ipc');
 
@@ -12,11 +13,12 @@ var ipc = require('ipc');
 
 @View({
   templateUrl: 'components/authErr/authErr.html',
-  directives: [formDirectives, NgIf],
+  directives: [formDirectives, NgIf, Reging],
 })
 
 export class AuthErr {
   constructor(@Inject(NgZone) zone) {
+    this.reging = false;
     this.webview = document.getElementById("regview");
     this.src = ipc.sendSync('get-reg-room-url') || '';
     this.finalSrc = this.src.replace(/\/login\.html\?from=/gi, '');
@@ -25,7 +27,7 @@ export class AuthErr {
     this.webview.addEventListener('ipc-message', (event) => {
       console.log('from webview:', event);
       switch (event.channel) {
-      case 'addr':
+      case 'reg-addr':
         ipc.send('reg-room-ok', event.args[0]);
         break;
       case 'reg-page-ready':
@@ -34,8 +36,9 @@ export class AuthErr {
       case 'reg-page-not-ready':
         zone.run(() => this.regPageReady = false);
         break;
-      case 'error':
-        console.log(event.args[0]);
+      case 'reg-error':
+        this.reging = false;
+        zone.run(() => this.err = event.args[0]);
         break;
       }
     });
@@ -71,6 +74,8 @@ export class AuthErr {
     if (!this.regPageReady || !data || !data.name) {
       return;
     }
+    this.reging = true;
+    this.err = '';
     this.webview.executeJavaScript(`RegRoom("${data.name}")`);
   }
 }
