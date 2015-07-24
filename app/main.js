@@ -21,6 +21,8 @@ var mainWindow;
 var conn;
 var roomInfo;
 var isFinish;
+var reconnectTimes = 0;
+var reconnectTimeoutObj;
 
 function sendToWindow(channel, msg) {
   if (mainWindow) {
@@ -101,6 +103,7 @@ try {
   conn.binaryType = 'arraybuffer';
   conn.onopen = function () {
     console.log('onopen');
+    reconnectTimes = 0;
     sendToWindow('room-status', 'ws-opened');
     sendToRoom({
       type: 'GetRoomInfo',
@@ -113,7 +116,11 @@ try {
   conn.onerror = function (error) {
     console.log('onerror:', error);
     if (!isFinish) {
-      setTimeout(function () {
+      clearTimeout(reconnectTimeoutObj);
+      reconnectTimeoutObj = setTimeout(function () {
+        if (reconnectTimes++ > 6) {
+          startRoom();
+        }
         conn.connect();
       }, 5e3);
     }
