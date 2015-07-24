@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require('path');
 var gulp = require('gulp');
 // load all gulp plugins
 var $ = require('gulp-load-plugins')({
@@ -94,8 +95,15 @@ gulp.task('finalize', ['clean'], function () {
   }
   destDir.write('package.json', manifest);
 
-  var configFilePath = projectDir.path('config/env_' + utils.getEnvName() + '.json');
-  destDir.copy(configFilePath, 'env_config.json');
+  var envConfig = projectDir.read('config/env_' + utils.getEnvName() + '.json', 'json');
+  envConfig.roomBinName = roomConfig.name;
+  switch (utils.getEnvName()) {
+  case 'development':
+  case 'test':
+    envConfig.roomDb = roomConfig.devWorkingDb;
+    break;
+  }
+  destDir.write('env_config.json', envConfig);
 });
 
 gulp.task('watch', function () {
@@ -104,22 +112,23 @@ gulp.task('watch', function () {
   gulp.watch('app/**/*.styl', ['stylus-watch']);
 });
 
-gulp.task('copyRoomConfig', function () {
-  var cfile = roomConfig.initConf;
+gulp.task('copyRoomDb', function () {
   switch (utils.getEnvName()) {
   case 'development':
   case 'test':
-    cfile = roomConfig[utils.os()].testConf;
-    break;
+    jetpack.copy(roomConfig.devDb, roomConfig.devWorkingDb, {
+      overwrite: true,
+    });
   }
-  return gulp.src(cfile).pipe($.rename('config.toml')).pipe(gulp.dest(roomConfig.electron));
 });
 
-gulp.task('copyRoom', ['copyRoomConfig'], function () {
+gulp.task('copyRoomBin', function () {
   return gulp.src(roomConfig[utils.os()].bin).pipe($.rename({
     basename: roomConfig.name,
   })).pipe(gulp.dest(roomConfig.electron));
 });
+
+gulp.task('copyRoom', ['copyRoomDb', 'copyRoomBin']);
 
 gulp.task('build', ['transpile', 'stylus', 'copy', 'finalize']);
 
