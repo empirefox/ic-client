@@ -20,6 +20,7 @@ module.exports = function () {
     electron: path.join(__dirname, '../node_modules/electron-prebuilt/dist/'),
     devDb: path.join(__dirname, '../dev/room-dev.db'),
     devWorkingDb: path.join(__dirname, '../dev/room-working-dev.db'),
+    devRemoteDb: path.join(__dirname, '../dev/room-dev-remote.db'),
   };
 
   return config;

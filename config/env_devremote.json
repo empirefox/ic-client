@@ -1,5 +1,5 @@
 {
-  "name": "production",
+  "name": "devremote",
   "roomHost": "https://icv3.luck2.me",
   "description": "Add here any environment specific stuff you like."
 }

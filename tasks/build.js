@@ -78,6 +78,7 @@ gulp.task('stylus-watch', stylusTask);
 gulp.task('finalize', ['clean'], function () {
   var manifest = srcDir.read('package.json', 'json');
   switch (utils.getEnvName()) {
+  case 'devremote':
   case 'development':
     // Add "dev" suffix to name, so Electron will write all
     // data like cookies and localStorage into separate place.
@@ -98,6 +99,7 @@ gulp.task('finalize', ['clean'], function () {
   var envConfig = projectDir.read('config/env_' + utils.getEnvName() + '.json', 'json');
   envConfig.roomBinName = roomConfig.name;
   switch (utils.getEnvName()) {
+  case 'devremote':
   case 'development':
   case 'test':
     envConfig.roomDb = roomConfig.devWorkingDb;
@@ -114,11 +116,17 @@ gulp.task('watch', function () {
 
 gulp.task('copyRoomDb', function () {
   switch (utils.getEnvName()) {
+  case 'devremote':
+    jetpack.copy(roomConfig.devRemoteDb, roomConfig.devWorkingDb, {
+      overwrite: true,
+    });
+    break;
   case 'development':
   case 'test':
     jetpack.copy(roomConfig.devDb, roomConfig.devWorkingDb, {
       overwrite: true,
     });
+    break;
   }
 });
 

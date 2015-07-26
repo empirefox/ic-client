@@ -24,6 +24,8 @@ var isFinish;
 var reconnectTimes = 0;
 var reconnectTimeoutObj;
 
+app.commandLine.appendSwitch ('ignore-certificate-errors', 'true');
+
 function sendToWindow(channel, msg) {
   if (mainWindow) {
     console.log('sendToWindow:', channel, msg);
@@ -98,7 +100,7 @@ function onRoomStaus(status) {
 try {
   // TODO insecure adpated protocols => ws options
   conn = new ws('ws://127.0.0.1:12301/register', {
-    origin: env.roomHost,
+    origin: 'http://127.0.0.1:12301',
   });
   conn.binaryType = 'arraybuffer';
   conn.onopen = function () {
@@ -134,6 +136,7 @@ try {
       break;
     case 'RoomInfo':
       roomInfo = statusObj.content;
+      console.log(roomInfo);
       break;
     default:
       console.log('unknow message', statusObj);
@@ -196,7 +199,7 @@ app.on('ready', function () {
 
   mainWindow.loadUrl('file://' + __dirname + '/app.html');
 
-  if (env.name === 'development') {
+  if (env.name === 'development' || env.name === 'devremote') {
     devHelper.setDevMenu();
     mainWindow.openDevTools();
   }
