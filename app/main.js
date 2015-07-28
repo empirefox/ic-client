@@ -64,8 +64,8 @@ function quit(type) {
 function startRoom() {
   var roomArgs = env.roomDb ? `-cpath="${env.roomDb}"` : '';
   var dir = path.join(app.getPath('exe'), '..');
-  console.log(`exec: ${dir}/{env.roomBinName} ${roomArgs}`);
-  exec(`${dir}/{env.roomBinName} ${roomArgs}`);
+  console.log(`exec: ${dir}/${env.roomBinName} ${roomArgs}`);
+  exec(`${dir}/${env.roomBinName} ${roomArgs}`);
 }
 startRoom();
 
