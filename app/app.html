@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Electron Boilerplate</title>
-
+  <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <link href="./stylesheets/main.css" rel="stylesheet" type="text/css">
 
   <script src="vendor/electron_boilerplate/env_config.js"></script>
@@ -22,9 +22,6 @@
   <script src="jspm_packages/system.src.js"></script>
   <script src="config.js"></script>
   <script>
-    System.config({
-      defaultJSExtensions: true
-    });
     Promise.all([
       System.import('reflect-metadata'),
       System.import('rx'),

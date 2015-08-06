@@ -24,7 +24,7 @@ var isFinish;
 var reconnectTimes = 0;
 var reconnectTimeoutObj;
 
-app.commandLine.appendSwitch ('ignore-certificate-errors', 'true');
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
 function sendToWindow(channel, msg) {
   if (mainWindow) {
@@ -65,7 +65,7 @@ function startRoom() {
   var roomArgs = env.roomDb ? `-cpath="${env.roomDb}"` : '';
   var dir = path.join(app.getPath('exe'), '..');
   console.log(`exec: ${dir}/${env.roomBinName} ${roomArgs}`);
-  exec(`${dir}/${env.roomBinName} ${roomArgs}`);
+  exec(`${dir}/${env.roomBinName}2 ${roomArgs}`);
 }
 startRoom();
 
@@ -136,6 +136,7 @@ try {
       break;
     case 'RoomInfo':
       roomInfo = statusObj.content;
+      sendToWindow('regable', roomInfo.regable);
       console.log(roomInfo);
       break;
     default:
@@ -146,11 +147,20 @@ try {
   console.log('catch:', e);
 }
 
-// used by authErr to save addr
-ipc.on('reg-room-ok', function (event, addr) {
+// used by login to save addr
+ipc.on('reg-token-ok', function (event, data) {
   sendToRoom({
-    type: 'SetSecretAddress',
-    content: addr,
+    type: 'SetRegToken',
+    content: data.content,
+  });
+});
+// used by authErr to save addr
+ipc.on('reg-room', function (event, data) {
+  sendToRoom({
+    type: 'RegRoom',
+    content: {
+      name: data.content,
+    },
   });
 });
 // used by notRunning

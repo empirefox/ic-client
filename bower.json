@@ -1,0 +1,20 @@
+{
+  "name": "ic-client",
+  "version": "0.0.0",
+  "homepage": "https://github.com/empirefox/ic-client",
+  "authors": [
+    "empirefox <empirefoxit@sina.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "font-awesome": "~4.4.0"
+  }
+}

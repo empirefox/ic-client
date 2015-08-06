@@ -18,6 +18,10 @@ a {
 }
 .container {
   text-align: center;
+  width: 90%;
+  height: 98%;
+  top: 46px;
+  position: relative;
 }
 .right {
   float: right !important;
@@ -76,4 +80,50 @@ nav ul a {
 }
 nav ul.left {
   float: left;
+}
+
+/*login*/
+
+.bs-oauth-list {
+  padding-left: 0px;
+  list-style: outside none none;
+}
+.bs-oauth-list li {
+  width: 140px;
+  font-size: 12px;
+  float: left;
+  height: 115px;
+  padding: 10px;
+  line-height: 1.4;
+  text-align: center;
+  background-color: #F9F9F9;
+  border: 1px solid #FFF;
+}
+.bs-oauth-list li:hover {
+  color: #FFF;
+  background-color: #563D7C;
+  cursor: pointer;
+}
+.bs-oauth-list .bs-oauth-text {
+  display: block;
+  text-align: center;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+.bs-oauth-list .fa {
+  font-size: 42px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.oauth-container {
+  width: 48%;
+  float: left;
+  border-right-style: inset;
+}
+.loginview {
+  width: 48%;
+  margin-left: 50%;
+  box-shadow: 2px 2px 6px #888888;
+  display: block;
+  height: 320px;
 }

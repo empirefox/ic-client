@@ -1,6 +1,4 @@
-import {Component, View, NgZone, bootstrap} from 'angular2/angular2';
-import {NgSwitch, NgSwitchWhen} from 'angular2/directives';
-import {Inject} from 'angular2/di';
+import {Component, View, Inject, NgZone, NgSwitch, NgSwitchWhen, httpInjectables, bootstrap} from 'angular2/angular2';
 
 import {NotRunning} from 'components/notRunning/notRunning';
 import {NoConnection} from 'components/noConnection/noConnection';
@@ -27,12 +25,14 @@ export class Status {
     this.roomStatus = 'not-running';
     ipc.on('room-status', (s) => {
       zone.run(() => {
-        if (this.roomStatus === 'auth-err' && s === 'authing') {
-          return;
+        switch (this.roomStatus) {
+        case 'auth-err':
+          if (s === 'authing') {
+            return;
+          }
+          break;
         }
-        if (this.roomStatus === s) {
-          return;
-        }
+
         this.roomStatus = s;
       });
     });
@@ -40,4 +40,4 @@ export class Status {
   }
 }
 
-bootstrap(Status);
+bootstrap(Status, [httpInjectables]);
