@@ -3,7 +3,7 @@
   "productName": "IC-Client",
   "identifier": "me.luck2.icv3",
   "description": "Ic client of icv3",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "empirefox <empirefox@gmain.com>",
   "main": "main.js",
   "config": {

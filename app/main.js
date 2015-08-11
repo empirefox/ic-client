@@ -4,6 +4,7 @@ var kill = require('tree-kill');
 var path = require('path');
 var app = require('app');
 var ipc = require('ipc');
+var shell = require('shell');
 var exec = require('child_process').exec;
 var BrowserWindow = require('browser-window');
 var env = require('./vendor/electron_boilerplate/env_config');
@@ -65,58 +66,46 @@ function startRoom() {
   var roomArgs = env.roomDb ? `-cpath="${env.roomDb}"` : '';
   var dir = path.join(app.getPath('exe'), '..');
   console.log(`exec: ${dir}/${env.roomBinName} ${roomArgs}`);
-  exec(`${dir}/${env.roomBinName}2 ${roomArgs}`);
+  exec(`${dir}/${env.roomBinName} ${roomArgs}`);
 }
 startRoom();
 
 function onRoomStaus(status) {
-  switch (status) {
-  case 'unreachable':
-    sendToWindow('room-status', 'no-connection');
-    break;
-  case 'authing':
-    sendToWindow('room-status', 'authing');
-    break;
-  case 'not_authed':
-    sendToWindow('room-status', 'auth-err');
-    break;
-  case 'auth_failed':
-    sendToWindow('room-status', 'auth-err');
-    break;
-  case 'not_ready':
-    sendToWindow('room-status', 'not-running');
-    break;
-  case 'ready':
-    sendToWindow('room-status', 'running');
-    break;
-  case 'removing':
-    sendToWindow('room-status', 'removing');
-    break;
-  default:
-    console.log(status);
+  sendToWindow('room-status', status);
+}
+
+function onRegable(status) {
+  if (status === 'regable') {
+    sendToWindow('regable');
+  } else {
+    sendToWindow('room-status', status);
   }
+}
+
+function onRecEnabled(enabled) {
+  sendToWindow('rec-enabled', enabled);
 }
 
 try {
   // TODO insecure adpated protocols => ws options
-  conn = new ws('ws://127.0.0.1:12301/register', {
-    origin: 'http://127.0.0.1:12301',
+  conn = new ws('ws://127.0.0.1:12301/local', {
+    origin: 'http://ic.client',
   });
   conn.binaryType = 'arraybuffer';
   conn.onopen = function () {
     console.log('onopen');
     reconnectTimes = 0;
-    sendToWindow('room-status', 'ws-opened');
+    sendToWindow('room-status', 'ws_opened');
     sendToRoom({
       type: 'GetRoomInfo',
     });
   };
   conn.onclose = function () {
     console.log('onclose');
-    sendToWindow('room-status', 'not-running');
+    sendToWindow('room-status', 'not_running');
   };
-  conn.onerror = function (error) {
-    console.log('onerror:', error);
+  conn.onerror = function () {
+    // console.log('onerror:', error);
     if (!isFinish) {
       clearTimeout(reconnectTimeoutObj);
       reconnectTimeoutObj = setTimeout(function () {
@@ -134,10 +123,14 @@ try {
     case 'Status':
       onRoomStaus(statusObj.content);
       break;
+    case 'Regable':
+      onRegable(statusObj.content);
+      break;
+    case 'RecEnabled':
+      onRecEnabled(statusObj.content);
+      break;
     case 'RoomInfo':
       roomInfo = statusObj.content;
-      sendToWindow('regable', roomInfo.regable);
-      console.log(roomInfo);
       break;
     default:
       console.log('unknow message', statusObj);
@@ -147,20 +140,32 @@ try {
   console.log('catch:', e);
 }
 
-// used by login to save addr
-ipc.on('reg-token-ok', function (event, data) {
+// used by login to save reg-token
+ipc.on('reg-token-ok', function (event, token) {
   sendToRoom({
     type: 'SetRegToken',
-    content: data.content,
+    content: token,
   });
 });
-// used by authErr to save addr
-ipc.on('reg-room', function (event, data) {
+// used by authErr to reg room
+ipc.on('reg-room', function (event, name) {
   sendToRoom({
-    type: 'RegRoom',
+    type: 'DoRegRoom',
     content: {
-      name: data.content,
+      name: name,
     },
+  });
+});
+// used by authErr
+ipc.on('get-regable', function () {
+  sendToRoom({
+    type: 'GetRegable',
+  });
+});
+// used by noConnection
+ipc.on('do-connect', function () {
+  sendToRoom({
+    type: 'DoConnect',
   });
 });
 // used by notRunning
@@ -170,13 +175,37 @@ ipc.on('start-room', function () {
 // used by running
 ipc.on('remove-room', function () {
   sendToRoom({
-    type: 'RemoveRoom',
+    type: 'DoRemoveRoom',
   });
 });
-// used by wsOpened
+// used by running
+ipc.on('open-rec-dir', function () {
+  console.log(roomInfo.recDir);
+  shell.openItem(roomInfo.recDir);
+});
+// used by waiting
 ipc.on('get-status', function () {
   sendToRoom({
     type: 'GetStatus',
+  });
+});
+// used by navbar
+ipc.on('get-rec-enabled', function () {
+  sendToRoom({
+    type: 'GetRecEnabled',
+  });
+});
+// used by navbar
+ipc.on('set-rec-enabled', function (event, enabled) {
+  sendToRoom({
+    type: 'SetRecEnabled',
+    content: enabled,
+  });
+});
+// used by navbar
+ipc.on('remove-reg-token', function () {
+  sendToRoom({
+    type: 'DoRemoveRegToken',
   });
 });
 // used by navbar

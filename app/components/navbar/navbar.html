@@ -1,8 +1,10 @@
 <nav>
   <div class="nav-wrapper">
     <ul class="right">
-      <li><a (click)='term()' href>退出</a></li>
-      <li><a (click)='close()' href>关闭窗口</a></li>
+      <li><a (click)='toggleRec();$event.preventDefault()' href>{{toggleRecTxt}}</a></li>
+      <li><a (click)='removeRegToken();$event.preventDefault()' href>清除用户登录状态</a></li>
+      <li><a (click)='close();$event.preventDefault()' href>关闭窗口</a></li>
+      <li><a (click)='term();$event.preventDefault()' href>退出</a></li>
     </ul>
   </div>
 </nav>

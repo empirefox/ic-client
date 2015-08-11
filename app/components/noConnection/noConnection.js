@@ -1,14 +1,36 @@
 import {Component, View} from 'angular2/angular2';
 
+var ipc = require('ipc');
+
 @Component({
-  selector: 'no-connection'
+  selector: 'no-connection',
+  properties: ['status'],
 })
 
 @View({
-  templateUrl: 'components/noConnection/noConnection.html'
+  templateUrl: 'components/noConnection/noConnection.html',
 })
 
 export class NoConnection {
-  constructor() {
+  constructor() {}
+
+  set status(status) {
+    switch (status) {
+    case 'unreachable':
+      this.txt = '本地监控室已运行，但无法连接服务器';
+      break;
+    case 'disconnected':
+      this.txt = '本地监控室已运行，到服务器的连接已断开';
+      break;
+    case 'bad_server_msg':
+      this.txt = '服务器消息错误，连接已断开';
+      break;
+    default:
+      this.txt = '';
+    }
+  }
+
+  doConnect() {
+    ipc.send('do-connect');
   }
 }

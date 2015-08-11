@@ -1,5 +1,4 @@
-import {Component, View, NgFor, CSSClass} from 'angular2/angular2';
-import {Inject} from 'angular2/di';
+import {Component, View, Inject, NgFor, CSSClass} from 'angular2/angular2';
 
 import {Oauth} from 'services/oauth';
 
@@ -9,6 +8,7 @@ var ipc = require('ipc');
   selector: 'login',
   appInjector: [],
   viewInjector: [Oauth],
+  properties: ['status'],
 })
 
 @View({
@@ -20,17 +20,38 @@ export class Login {
   constructor(@Inject(Oauth) oauthService) {
     oauthService.getProviders().subscribe(oauths => this.oauths = oauths);
     this.webview = document.getElementById("loginview");
+    this.webview.src = 'data:text/plain,Please choose your favorite login entry';
+
+    if (this.webview.name !== 'loginview') {
+      this.webview.name = 'loginview';
+      this.addListeners();
+    }
+  }
+
+  set status(status) {
+    switch (status) {
+    case 'bad_reg_token':
+      this.txt = '用户登录信息错误，请重新登录';
+      break;
+    case 'save_reg_token_error':
+      this.txt = '保存用户登录信息错误，请稍后重新登录';
+      break;
+    default:
+      this.txt = '';
+    }
+  }
+
+  addListeners() {
     this.webview.addEventListener('ipc-message', (event) => {
-      console.log('from webview:', event);
       switch (event.channel) {
       case 'reg-token':
+        this.webview.src = 'data:text/plain,Please choose your favorite login entry';
         ipc.send('reg-token-ok', event.args[0]);
         zone.run(() => {
           this.err = null;
         });
         break;
       case 'reg-token-error':
-        this.reging = false;
         zone.run(() => {
           this.err = event.args[0];
         });

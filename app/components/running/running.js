@@ -11,10 +11,13 @@ var ipc = require('ipc');
 })
 
 export class Running {
-  constructor() {
+  constructor() {}
+
+  openRecDir() {
+    ipc.send('open-rec-dir');
   }
 
   remove() {
-		ipc.send('remove-room');
+    ipc.send('remove-room');
   }
 }

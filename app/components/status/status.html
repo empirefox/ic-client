@@ -1,23 +1,17 @@
-<div [ng-switch]="roomStatus">
-  <template [ng-switch-when]="'ws-opened'">
-    <ws-opened></ws-opened>
-  </template>
-  <template [ng-switch-when]="'not-running'">
-    <not-running></not-running>
+<div [ng-switch]="tag">
+  <template [ng-switch-when]="'waiting'">
+    <waiting [status]='status'></waiting>
   </template>
   <template [ng-switch-when]="'no-connection'">
-    <no-connection></no-connection>
+    <no-connection [status]='status'></no-connection>
   </template>
   <template [ng-switch-when]="'auth-err'">
-    <auth-err></auth-err>
+    <auth-err [status]='status'></auth-err>
   </template>
   <template [ng-switch-when]="'running'">
     <running></running>
   </template>
-  <template [ng-switch-when]="'removing'">
-    <removing></removing>
-  </template>
-  <template [ng-switch-when]="'authing'">
-    <authing></authing>
+  <template [ng-switch-when]="'not-running'">
+    <not-running></not-running>
   </template>
 </div>
