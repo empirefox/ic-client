@@ -1,4 +1,5 @@
-import {Injectable, Inject, Http} from 'angular2/angular2';
+import {Injectable, Inject} from 'angular2/angular2';
+import {Http} from 'angular2/http';
 
 var env = require('./env_config');
 

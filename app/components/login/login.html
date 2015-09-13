@@ -2,15 +2,15 @@
   <h4>{{txt}}</h4>
   <h4>请选择登录方式</h4>
   <ul class="bs-oauth-list">
-    <li *ng-for="#oauth of oauths" (click)="doLogin(oauth)">
-      <span [class]="oauth.css" aria-hidden="true"></span>
+    <li *ng-for="#oauth of oauths" (click)="doLogin(oauth.src)">
+      <span [ng-class]="oauth.css" aria-hidden="true"></span>
       <span class="bs-oauth-text">{{oauth.txt}}</span>
     </li>
   </ul>
 </div>
 
 <!-- <webview id="loginview" src="http://127.0.0.1:9999/login.html?from=/regroom.html" style="width:100%;height:500px"></webview>
-<webview id="loginview" src="https://icv3.luck2.me/login.html?from=/regroom.html" style="width:100%;height:500px"></webview>
+<webview id="loginview" src="https://www.gogogocam.com/login.html?from=/regroom.html" style="width:100%;height:500px" disablewebsecurity></webview>
 see https://github.com/atom/electron/issues/1133
 -->
-<webview id="loginview" class="loginview" preload="./components/authErr/del.js" nodeintegration disablewebsecurity></webview>
+<div id="loginview" class="loginview"></div>

@@ -1,4 +1,7 @@
-import {Component, View, Inject, NgZone, NgSwitch, NgSwitchWhen, httpInjectables, bootstrap} from 'angular2/angular2';
+'use strict';
+
+import {Component, View, NgZone, NgSwitch, NgSwitchWhen, bootstrap} from 'angular2/angular2';
+import {HTTP_BINDINGS} from 'angular2/http';
 
 import {NotRunning} from 'components/notRunning/notRunning';
 import {NoConnection} from 'components/noConnection/noConnection';
@@ -19,7 +22,7 @@ var ipc = require('ipc');
 })
 
 export class Status {
-  constructor(@Inject(NgZone) zone) {
+  constructor(zone: NgZone) {
     this.status = 'not_running';
     this.tag = 'not-running';
     ipc.on('room-status', (status) => {
@@ -37,11 +40,13 @@ export class Status {
         case 'bad_server_msg':
           this.tag = 'no-connection';
           break;
-        case 'bad_room_token':
-        case 'save_room_token_error':
-        case 'reg_error':
         case 'bad_reg_token':
         case 'save_reg_token_error':
+          if (this.tag === 'running')
+            break;
+        case 'bad_room_token':
+        case 'reg_error':
+        case 'save_room_token_error':
           this.tag = 'auth-err';
           break;
         case 'ready':
@@ -60,4 +65,4 @@ export class Status {
   }
 }
 
-bootstrap(Status, [httpInjectables]);
+bootstrap(Status, [HTTP_BINDINGS]);

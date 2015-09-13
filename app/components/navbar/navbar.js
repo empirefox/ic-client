@@ -1,4 +1,4 @@
-import {Component, View, Inject, NgZone, bootstrap} from 'angular2/angular2';
+import {Component, View, NgZone, bootstrap} from 'angular2/angular2';
 
 var ipc = require('ipc');
 
@@ -12,7 +12,7 @@ var ipc = require('ipc');
 })
 
 export class Navbar {
-  constructor(@Inject(NgZone) zone) {
+  constructor(zone: NgZone) {
     this.rec = 1;
     this.toggleRecBtnDiabled = 1;
     this.toggleRecTxt = '切换录像';

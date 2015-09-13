@@ -56,7 +56,7 @@ gulp.task('clean', function (callback) {
 var copyTask = function () {
   return projectDir.copyAsync('app', destDir.path(), {
     overwrite: true,
-    matching: config.toCopy,
+    matching: config.copyFromAppDir,
   });
 };
 
@@ -110,7 +110,9 @@ gulp.task('finalize', ['clean'], function () {
 
 gulp.task('watch', function () {
   gulp.watch(config.jsCodeToTranspile, ['transpile-watch']);
-  gulp.watch(config.toCopy, ['copy-watch']);
+  gulp.watch(config.copyFromAppDir, {
+    cwd: 'app'
+  }, ['copy-watch']);
   gulp.watch('app/**/*.styl', ['stylus-watch']);
 });
 

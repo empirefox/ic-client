@@ -5,3 +5,5 @@ Priority: optional
 Architecture: amd64
 Installed-Size: {{size}}
 Description: {{description}}
+Depends: libopus0, libpulse0, libspeex1, libvorbis0a, libvpx2|libvpx1, libass5, libva1, libxvidcore4, libx264-146|libx264-142, libmp3lame0, libfdk-aac0
+Recommends: firefox

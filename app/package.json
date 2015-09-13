@@ -1,19 +1,18 @@
 {
   "name": "ic-client",
   "productName": "IC-Client",
-  "identifier": "me.luck2.icv3",
-  "description": "Ic client of icv3",
-  "version": "1.1.0",
+  "identifier": "com.gogogocam.ic",
+  "description": "Ic client of gogogocam.com",
+  "version": "1.4.0",
   "author": "empirefox <empirefox@gmain.com>",
   "main": "main.js",
   "config": {
     "target": "development"
   },
   "dependencies": {
-    "fs-jetpack": "^0.6.5",
-    "pouchdb": "^3.6.0",
+    "fs-jetpack": "^0.7.0",
     "rc-socket.js": "^0.2.6",
     "tree-kill": "^0.1.1",
-    "ws": "^0.7.2"
+    "ws": "^0.8.0"
   }
 }

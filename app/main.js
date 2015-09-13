@@ -157,7 +157,7 @@ ipc.on('reg-room', function (event, name) {
   });
 });
 // used by authErr
-ipc.on('get-regable', function () {
+ipc.on('get-regable', () => {
   sendToRoom({
     type: 'GetRegable',
   });
@@ -180,10 +180,10 @@ ipc.on('remove-room', function () {
 });
 // used by running
 ipc.on('open-rec-dir', function () {
-  console.log(roomInfo.recDir);
+  // console.log(roomInfo.recDir);
   shell.openItem(roomInfo.recDir);
 });
-// used by waiting
+// used by waiting, login
 ipc.on('get-status', function () {
   sendToRoom({
     type: 'GetStatus',
@@ -224,26 +224,25 @@ var mainWindowState = windowStateKeeper('main', {
 });
 
 app.on('ready', function () {
-
   mainWindow = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
     width: mainWindowState.width,
-    height: mainWindowState.height
+    height: mainWindowState.height,
   });
 
   if (mainWindowState.isMaximized) {
     mainWindow.maximize();
   }
 
-  mainWindow.loadUrl('file://' + __dirname + '/app.html');
+  mainWindow.loadUrl(`file://${__dirname}/app.html`);
 
   if (env.name === 'development' || env.name === 'devremote') {
     devHelper.setDevMenu();
     mainWindow.openDevTools();
   }
 
-  mainWindow.on('crashed', function (event) {
+  mainWindow.webContents.on('crashed', function (event) {
     console.log('mainWindow crashed:', event);
   });
 

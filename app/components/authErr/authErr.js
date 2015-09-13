@@ -1,4 +1,4 @@
-import {Component, View, Inject, NgZone, NgIf, formDirectives}from 'angular2/angular2';
+import {Component, View, NgZone, NgIf, FORM_DIRECTIVES}from 'angular2/angular2';
 
 import {Login} from 'components/login/login';
 
@@ -12,12 +12,13 @@ var ipc = require('ipc');
 
 @View({
   templateUrl: 'components/authErr/authErr.html',
-  directives: [formDirectives, NgIf, Login],
+  directives: [FORM_DIRECTIVES, NgIf, Login],
 })
 
 export class AuthErr {
-  constructor(@Inject(NgZone) zone) {
+  constructor(zone: NgZone) {
     this.regable = false;
+    ipc.removeAllListeners('regable');
     ipc.on('regable', () => {
       zone.run(() => this.regable = true);
     });

@@ -27,6 +27,10 @@ var copyRuntime = function () {
     return projectDir.copyAsync('node_modules/electron-prebuilt/dist', readyAppDir.path(), { overwrite: true });
 };
 
+var cleanupRuntime = function() {
+    return readyAppDir.removeAsync('resources/default_app');
+}
+
 var packageBuiltApp = function () {
     var deferred = Q.defer();
 
@@ -59,6 +63,10 @@ var finalize = function () {
     return deferred.promise;
 };
 
+var renameApp = function() {
+    return readyAppDir.renameAsync('electron.exe', manifest.productName + '.exe');
+}
+
 var createInstaller = function () {
     var deferred = Q.defer();
 
@@ -87,6 +95,14 @@ var createInstaller = function () {
     ], {
         stdio: 'inherit'
     });
+    nsis.on('error', function (err) {
+        if (err.message === 'spawn makensis ENOENT') {
+            throw "Can't find NSIS. Are you sure you've installed it and"
+                + " added to PATH environment variable?";
+        } else {
+            throw err;
+        }
+    });
     nsis.on('close', function () {
         gulpUtil.log('Installer ready!', releasesDir.path(finalPackageName));
         deferred.resolve();
@@ -102,8 +118,10 @@ var cleanClutter = function () {
 module.exports = function () {
     return init()
     .then(copyRuntime)
+    .then(cleanupRuntime)
     .then(packageBuiltApp)
     .then(finalize)
+    .then(renameApp)
     .then(createInstaller)
     .then(cleanClutter);
 };

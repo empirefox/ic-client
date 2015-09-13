@@ -16,13 +16,13 @@ module.exports = function() {
         '!app/vendor/**'
     ],
 
-    toCopy: [
-      'app/*.js',
-      'app/node_modules/**',
-      'app/jspm_packages/**',
-      'app/bower_components/**',
-      'app/vendor/**',
-      'app/**/*.html'
+    copyFromAppDir: [
+      './*.js',
+      './node_modules/**',
+      './jspm_packages/**',
+      './bower_components/**',
+      './vendor/**',
+      './**/*.html'
     ],
   };
 
