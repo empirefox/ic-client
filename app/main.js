@@ -50,11 +50,12 @@ function quit(type) {
   app.quit();
   if (type === 'Exit' && roomInfo && roomInfo.pid) {
     kill(roomInfo.pid, 'SIGTERM');
+  } else {
+    sendToRoom({
+      type: type,
+    });
   }
-  sendToRoom({
-    type: type,
-  });
-  setTimeout(function () {
+  setTimeout(() => {
     if (conn) {
       conn.close();
     }
@@ -141,14 +142,14 @@ try {
 }
 
 // used by login to save reg-token
-ipc.on('reg-token-ok', function (event, token) {
+ipc.on('reg-token-ok', (event, token) => {
   sendToRoom({
     type: 'SetRegToken',
     content: token,
   });
 });
 // used by authErr to reg room
-ipc.on('reg-room', function (event, name) {
+ipc.on('reg-room', (event, name) => {
   sendToRoom({
     type: 'DoRegRoom',
     content: {
@@ -163,59 +164,50 @@ ipc.on('get-regable', () => {
   });
 });
 // used by noConnection
-ipc.on('do-connect', function () {
+ipc.on('do-connect', () => {
   sendToRoom({
     type: 'DoConnect',
   });
 });
 // used by notRunning
-ipc.on('start-room', function () {
-  startRoom();
-});
+ipc.on('start-room', () => startRoom());
 // used by running
-ipc.on('remove-room', function () {
+ipc.on('remove-room', () => {
   sendToRoom({
     type: 'DoRemoveRoom',
   });
 });
 // used by running
-ipc.on('open-rec-dir', function () {
-  // console.log(roomInfo.recDir);
-  shell.openItem(roomInfo.recDir);
-});
+ipc.on('open-rec-dir', () => shell.openItem(roomInfo.recDir));
 // used by waiting, login
-ipc.on('get-status', function () {
+ipc.on('get-status', () => {
   sendToRoom({
     type: 'GetStatus',
   });
 });
 // used by navbar
-ipc.on('get-rec-enabled', function () {
+ipc.on('get-rec-enabled', () => {
   sendToRoom({
     type: 'GetRecEnabled',
   });
 });
 // used by navbar
-ipc.on('set-rec-enabled', function (event, enabled) {
+ipc.on('set-rec-enabled', (event, enabled) => {
   sendToRoom({
     type: 'SetRecEnabled',
     content: enabled,
   });
 });
 // used by navbar
-ipc.on('remove-reg-token', function () {
+ipc.on('remove-reg-token', () => {
   sendToRoom({
     type: 'DoRemoveRegToken',
   });
 });
 // used by navbar
-ipc.on('term', function () {
-  quit('Exit');
-});
+ipc.on('term', () => quit('Exit'));
 // used by navbar
-ipc.on('close', function () {
-  quit('Close');
-});
+ipc.on('close', () => quit('Close'));
 
 // Preserver of the window size and position between app launches.
 var mainWindowState = windowStateKeeper('main', {
@@ -223,7 +215,7 @@ var mainWindowState = windowStateKeeper('main', {
   height: 450,
 });
 
-app.on('ready', function () {
+app.on('ready', () => {
   mainWindow = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
@@ -242,15 +234,9 @@ app.on('ready', function () {
     mainWindow.openDevTools();
   }
 
-  mainWindow.webContents.on('crashed', function (event) {
-    console.log('mainWindow crashed:', event);
-  });
+  mainWindow.webContents.on('crashed', (event) => console.log('mainWindow crashed:', event));
 
-  mainWindow.on('close', function () {
-    mainWindowState.saveState(mainWindow);
-  });
+  mainWindow.on('close', () => mainWindowState.saveState(mainWindow));
 });
 
-app.on('window-all-closed', function () {
-  quit('Close');
-});
+app.on('window-all-closed', () => quit('Close'));
