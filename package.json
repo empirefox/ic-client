@@ -2,7 +2,7 @@
   "private": true,
   "devDependencies": {
     "asar": "^0.8.0",
-    "electron-prebuilt": "^0.33.0",
+    "electron-prebuilt": "^0.33.1",
     "fs-jetpack": "^0.7.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
@@ -10,7 +10,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-run": "^1.6.11",
     "gulp-sourcemaps": "^1.5.2",
-    "gulp-stylus": "^2.0.6",
+    "gulp-stylus": "^2.0.7",
     "gulp-util": "^3.0.6",
     "q": "^1.4.1",
     "tree-kill": "^0.1.1",
