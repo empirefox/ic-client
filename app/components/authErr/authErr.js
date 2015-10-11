@@ -1,19 +1,23 @@
+'use strict';
+
 import {Component, View, NgZone, NgIf, FORM_DIRECTIVES}from 'angular2/angular2';
 
 import {Login} from 'components/login/login';
 
 var ipc = require('ipc');
 
+/*start-non-standard*/
 @Component({
   selector: 'auth-err',
   appInjector: [NgZone],
-  properties: ['rs:status'],
+  inputs: ['rs:status'],
 })
 
 @View({
   templateUrl: 'components/authErr/authErr.html',
   directives: [FORM_DIRECTIVES, NgIf, Login],
 })
+/*end-non-standard*/
 
 export class AuthErr {
   constructor(zone: NgZone) {

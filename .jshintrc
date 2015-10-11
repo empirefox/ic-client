@@ -15,7 +15,7 @@
     "plusplus"      : false,
     "undef"         : true,
     "unused"        : true,
-    "strict"        : false,
+    "strict"        : true,
     "trailing"      : true,
     "maxdepth"      : 4,
     "maxstatements" : false,
@@ -60,6 +60,10 @@
     "onevar"        : false,
     "passfail"      : false,
     "white"         : false,
+    "moz"           : true,
+    "ignoreDelimiters": [
+      { "start": "start-non-standard", "end": "end-non-standard" }
+    ],
     "predef"        : [
         "angular",
         "jasmine",

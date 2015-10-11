@@ -1,3 +1,8 @@
+bug fix
+===============
+* add ```baseURL: `${__dirname}/`,``` to config.js
+* rxjs < 5.0.0-alpha.2 ```jspm install npm:@reactivex/rxjs -o "{format: 'cjs'}"```
+
 electron-boilerplate
 ==============
 Comprehensive boilerplate application for [Electron](http://electron.atom.io).  

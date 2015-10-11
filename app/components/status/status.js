@@ -11,6 +11,7 @@ import {Waiting} from 'components/waiting/waiting';
 
 var ipc = require('ipc');
 
+/*start-non-standard*/
 @Component({
   selector: 'status',
   appInjector: [NgZone],
@@ -20,12 +21,13 @@ var ipc = require('ipc');
   templateUrl: 'components/status/status.html',
   directives: [NgSwitch, NgSwitchWhen, NotRunning, NoConnection, AuthErr, Running, Waiting],
 })
+/*end-non-standard*/
 
 export class Status {
   constructor(zone: NgZone) {
     this.status = 'not_running';
     this.tag = 'not-running';
-    ipc.on('room-status', (status) => {
+    ipc.on('room-status', status => {
       zone.run(() => {
         switch (status) {
         case 'connecting':

@@ -1,31 +1,30 @@
 'use strict';
 
-import {Component, View, Inject, NgFor, NgClass} from 'angular2/angular2';
+import {Component, View, NgFor, NgClass} from 'angular2/angular2';
 
-import {Oauth} from 'services/oauth';
+import {Providers} from 'services/oauth';
 
 let ipc = require('ipc');
+let url = require('url');
+let querystring = require('querystring');
 
+/*start-non-standard*/
 @Component({
   selector: 'login',
-  viewBindings: [Oauth],
-  properties: ['status'],
+  viewBindings: [Providers],
+  inputs: ['status'],
 })
 
 @View({
   templateUrl: 'components/login/login.html',
   directives: [NgFor, NgClass],
 })
+/*end-non-standard*/
 
 export class Login {
-  constructor(@Inject(Oauth) oauthService) {
+  constructor(providers: Providers) {
     ipc.send('get-status');
-    oauthService.getProviders().subscribe(oauths => this.oauths = oauths);
-    let loginview = document.getElementById("loginview");
-    loginview.innerHTML = '<webview preload="./components/authErr/del.js" nodeintegration></webview>';
-    this.webview = loginview.firstElementChild;
-    this.webview.src = 'data:text/plain,Please choose your favorite login entry';
-    this.addListeners();
+    this.providers = providers.get('loginview');
   }
 
   set status(status) {
@@ -41,26 +40,7 @@ export class Login {
     }
   }
 
-  addListeners() {
-    this.webview.addEventListener('ipc-message', (event) => {
-      switch (event.channel) {
-      case 'reg-token':
-        this.webview.src = 'data:text/plain,Please wait!';
-        ipc.send('reg-token-ok', event.args[0]);
-        zone.run(() => {
-          this.err = null;
-        });
-        break;
-      case 'reg-token-error':
-        zone.run(() => {
-          this.err = event.args[0];
-        });
-        break;
-      }
-    });
-  }
-
-  doLogin(src) {
-    this.webview.src = src;
+  onAuthenticate(provider) {
+    provider.authenticate();
   }
 }

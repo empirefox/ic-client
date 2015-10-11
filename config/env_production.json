@@ -1,6 +1,7 @@
 {
   "name": "production",
-  "mainOrigin": "http://www.gogogocam.com",
+  "siteOrigin": "https://www.gogogocam.com",
+  "oauth": "http://cdn",
   "apiOrigin": "https://ic-api.herokuapp.com",
   "description": "Add here any environment specific stuff you like."
 }

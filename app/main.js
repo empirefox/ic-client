@@ -1,5 +1,6 @@
 'use strict';
 
+var url = require('url');
 var kill = require('tree-kill');
 var path = require('path');
 var app = require('app');
@@ -12,6 +13,9 @@ var devHelper = require('./vendor/electron_boilerplate/dev_helper');
 var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
 
 require('crash-reporter').start();
+
+var apiOriginParser = url.parse(env.apiOrigin);
+var http = require(apiOriginParser.protocol.split(':')[0]);
 
 // TODO insecure adapt
 global.WebSocket = require('ws');
@@ -142,10 +146,31 @@ try {
 }
 
 // used by login to save reg-token
-ipc.on('reg-token-ok', (event, token) => {
-  sendToRoom({
-    type: 'SetRegToken',
-    content: token,
+ipc.on('xreq', (event, xreq) => {
+  let options = {
+    hostname: apiOriginParser.hostname,
+    port: apiOriginParser.port,
+    path: xreq.path,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  let req = http.request(options, res => {
+    let reply = '';
+    res.on('data', chunk => reply += chunk);
+    res.on('end', () => {
+      console.log(reply);
+      sendToRoom({
+        type: 'SetRegToken',
+        content: JSON.parse(reply).token,
+      });
+    });
+  });
+  req.write(xreq.body);
+  req.end();
+  req.on('error', err => {
+    sendToWindow('xreq-failed', JSON.stringify(err));
   });
 });
 // used by authErr to reg room

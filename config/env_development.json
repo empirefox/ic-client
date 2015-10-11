@@ -1,6 +1,7 @@
 {
   "name": "development",
-  "mainOrigin": "http://127.0.0.1:9999",
+  "siteOrigin": "http://127.0.0.1:9999",
+  "oauth": "http://127.0.0.1:9999/js/api-data.json",
   "apiOrigin": "http://127.0.0.1:9998",
   "description": "Add here any environment specific stuff you like."
 }

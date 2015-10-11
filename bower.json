@@ -15,7 +15,6 @@
     "tests"
   ],
   "dependencies": {
-    "font-awesome": "~4.4.0",
-    "font-diao": "~0.0.8"
+    "font-awesome": "~4.4.0"
   }
 }

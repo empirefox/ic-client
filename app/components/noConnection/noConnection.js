@@ -1,15 +1,18 @@
+'use strict';
 import {Component, View} from 'angular2/angular2';
 
 var ipc = require('ipc');
 
+/*start-non-standard*/
 @Component({
   selector: 'no-connection',
-  properties: ['status'],
+  inputs: ['status'],
 })
 
 @View({
   templateUrl: 'components/noConnection/noConnection.html',
 })
+/*end-non-standard*/
 
 export class NoConnection {
   constructor() {}

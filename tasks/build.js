@@ -63,6 +63,8 @@ var copyTask = function () {
 gulp.task('copy', ['clean'], copyTask);
 gulp.task('copy-watch', copyTask);
 
+gulp.task('oauth', ['clean'], require('./oauth'));
+
 gulp.task('transpile', ['clean'], transpileTask);
 gulp.task('transpile-watch', transpileTask);
 
@@ -140,6 +142,6 @@ gulp.task('copyRoomBin', function () {
 
 gulp.task('copyRoom', ['copyRoomDb', 'copyRoomBin']);
 
-gulp.task('build', ['transpile', 'stylus', 'copy', 'finalize']);
+gulp.task('build', ['transpile', 'stylus', 'copy', 'oauth', 'finalize']);
 
 gulp.task('default', ['build']);

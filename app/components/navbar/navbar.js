@@ -1,7 +1,9 @@
+'use strict';
 import {Component, View, NgZone, bootstrap} from 'angular2/angular2';
 
 var ipc = require('ipc');
 
+/*start-non-standard*/
 @Component({
   selector: 'navbar',
   appInjector: [NgZone],
@@ -10,6 +12,7 @@ var ipc = require('ipc');
 @View({
   templateUrl: 'components/navbar/navbar.html',
 })
+/*end-non-standard*/
 
 export class Navbar {
   constructor(zone: NgZone) {
