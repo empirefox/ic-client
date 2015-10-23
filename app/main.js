@@ -161,10 +161,12 @@ ipc.on('xreq', (event, xreq) => {
     res.on('data', chunk => reply += chunk);
     res.on('end', () => {
       console.log(reply);
-      sendToRoom({
-        type: 'SetRegToken',
-        content: JSON.parse(reply).token,
-      });
+      if (reply) {
+        sendToRoom({
+          type: 'SetRegToken',
+          content: JSON.parse(reply).token,
+        });
+      }
     });
   });
   req.write(xreq.body);

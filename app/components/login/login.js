@@ -11,7 +11,7 @@ let querystring = require('querystring');
 /*start-non-standard*/
 @Component({
   selector: 'login',
-  viewBindings: [Providers],
+  viewProviders: [Providers],
   inputs: ['status'],
 })
 

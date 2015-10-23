@@ -2,7 +2,7 @@
   "private": true,
   "devDependencies": {
     "asar": ">=0.8.0",
-    "electron-prebuilt": ">=0.33.7",
+    "electron-prebuilt": ">=0.33.8",
     "fs-jetpack": ">=0.7.0",
     "gulp": ">=3.9.0",
     "gulp-babel": ">=5.2.1",
@@ -35,9 +35,9 @@
       "baseURL": "app"
     },
     "dependencies": {
-      "@reactivex/rxjs": "npm:@reactivex/rxjs@^5.0.0-alpha.2",
-      "angular2": "npm:angular2@2.0.0-alpha.40",
-      "immutable": "npm:immutable@^3.7.4",
+      "@reactivex/rxjs": "npm:@reactivex/rxjs@^5.0.0-alpha.3",
+      "angular2": "npm:angular2@2.0.0-alpha.42",
+      "immutable": "npm:immutable@^3.7.5",
       "reflect-metadata": "npm:reflect-metadata@^0.1.2",
       "traceur": "github:jmcriffey/bower-traceur@0.0.91",
       "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.91",

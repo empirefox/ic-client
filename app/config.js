@@ -17,9 +17,9 @@ System.config({
   },
 
   map: {
-    "@reactivex/rxjs": "npm:@reactivex/rxjs@5.0.0-alpha.2",
-    "angular2": "npm:angular2@2.0.0-alpha.40",
-    "immutable": "npm:immutable@3.7.4",
+    "@reactivex/rxjs": "npm:@reactivex/rxjs@5.0.0-alpha.3",
+    "angular2": "npm:angular2@2.0.0-alpha.42",
+    "immutable": "npm:immutable@3.7.5",
     "reflect-metadata": "npm:reflect-metadata@0.1.2",
     "traceur": "github:jmcriffey/bower-traceur@0.0.91",
     "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.91",
@@ -57,11 +57,11 @@ System.config({
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
     },
-    "npm:@reactivex/rxjs@5.0.0-alpha.2": {
+    "npm:@reactivex/rxjs@5.0.0-alpha.3": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:angular2@2.0.0-alpha.40": {
+    "npm:angular2@2.0.0-alpha.42": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
@@ -272,6 +272,9 @@ System.config({
     },
     "npm:ripemd160@1.0.1": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:rx@2.5.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:sha.js@2.4.4": {

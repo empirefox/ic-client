@@ -1,7 +1,7 @@
 {
   "name": "devremote",
   "siteOrigin": "https://www.gogogocam.com",
-  "oauth": "http://cdn",
-  "apiOrigin": "https://ic-api.herokuapp.com",
+  "oauth": "https://www.gogogocam.com/js/api-data.json",
+  "apiOrigin": "https://gocamv1.mybluemix.net",
   "description": "Add here any environment specific stuff you like."
 }

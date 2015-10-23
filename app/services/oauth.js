@@ -23,18 +23,21 @@ export class Provider {
     let promise = new Promise((resolve, reject) => {
       webview.addEventListener('did-get-redirect-request', event => {
         let parser = url.parse(event.newUrl);
+        if (parser.host !== url.parse(this.sp.redirectUri).host) {
+          return;
+        }
         if (parser.search || parser.hash) {
           let queryParams = parser.search.substring(1).replace(/\/$/, '');
           let qs = querystring.parse(queryParams);
           if (!qs.error) {
-            resolve(qs);
             this.createLoginView('data:text/plain,Please wait!');
+            resolve(qs);
           } else {
             this.createLoginView('data:text/plain,Error:' + qs.error);
           }
-          return;
+        } else {
+          this.createLoginView('data:text/plain,Authorization Failed');
         }
-        this.createLoginView('data:text/plain,Authorization Failed');
       });
 
       webview.addEventListener('did-fail-load', event => {
@@ -99,7 +102,7 @@ export class Provider {
 
   createLoginView(src) {
     let loginview = document.getElementById(this.selector);
-    loginview.innerHTML = `<webview src="${src}"></webview>`;
+    loginview.innerHTML = `<webview src="${src}" httpreferrer="${window.env.siteOrigin}"></webview>`;
     return loginview.firstElementChild;
   }
 

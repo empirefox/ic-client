@@ -1,7 +1,7 @@
 'use strict';
 
 import {Component, View, NgZone, NgSwitch, NgSwitchWhen, bootstrap} from 'angular2/angular2';
-import {HTTP_BINDINGS} from 'angular2/http';
+import {HTTP_PROVIDERS} from 'angular2/http';
 
 import {NotRunning} from 'components/notRunning/notRunning';
 import {NoConnection} from 'components/noConnection/noConnection';
@@ -67,4 +67,4 @@ export class Status {
   }
 }
 
-bootstrap(Status, [HTTP_BINDINGS]);
+bootstrap(Status, [HTTP_PROVIDERS]);
