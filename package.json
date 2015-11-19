@@ -12,6 +12,7 @@
     "gulp-sourcemaps": ">=1.6.0",
     "gulp-stylus": ">=2.1.0",
     "gulp-util": ">=3.0.6",
+    "jspm": ">=0.16.14",
     "q": ">=2.0.3",
     "string": ">=3.3.1",
     "sync-request": ">=2.0.1",

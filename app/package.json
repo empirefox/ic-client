@@ -3,7 +3,7 @@
   "productName": "IC-Client",
   "identifier": "com.gogogocam.ic",
   "description": "Ic client of gogogocam.com",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "author": "empirefox <empirefox@gmain.com>",
   "main": "main.js",
   "config": {

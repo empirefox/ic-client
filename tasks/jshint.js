@@ -1,8 +1,8 @@
 var gulp = require('gulp');
-var jshint = require('gulp-jshint');
+var jslint = require('gulp-jslint');
 
-gulp.task('jshint', function () {
+gulp.task('jslint', function () {
   return gulp.src(['app/*.js', 'app/@(components|services)/**/*.js', 'vendor/electron_boilerplate/*.js']).
-  pipe(jshint()).pipe(jshint.reporter('jshint-stylish')).
-  pipe(jshint.reporter('fail'));
+  pipe(jslint()).pipe(jslint.reporter('jslint-stylish')).
+  pipe(jslint.reporter('fail'));
 });
