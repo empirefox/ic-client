@@ -4,7 +4,7 @@ import {Component, View, NgFor, NgClass} from 'angular2/angular2';
 
 import {Providers} from 'services/oauth';
 
-let ipc = require('ipc');
+let ipc = require('electron').ipcRenderer;
 let url = require('url');
 let querystring = require('querystring');
 

@@ -2,7 +2,7 @@
 
 import {Http} from 'angular2/http';
 
-let ipc = require('ipc');
+let ipc = require('electron').ipcRenderer;
 let url = require('url');
 let querystring = require('querystring');
 let S = require('string');
@@ -22,7 +22,7 @@ export class Provider {
     let webview = this.createLoginView(this.buildAuthorizeUrl());
     let promise = new Promise((resolve, reject) => {
       webview.addEventListener('did-get-redirect-request', event => {
-        let parser = url.parse(event.newUrl);
+        let parser = url.parse(event.newURL);
         if (parser.host !== url.parse(this.sp.redirectUri).host) {
           return;
         }

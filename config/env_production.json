@@ -2,6 +2,6 @@
   "name": "production",
   "siteOrigin": "https://www.gogogocam.com",
   "oauth": "https://www.gogogocam.com/js/api-data.json",
-  "apiOrigin": "https://gocamv1.mybluemix.net",
+  "apiOrigin": "https://gocamcom.daoapp.io",
   "description": "Add here any environment specific stuff you like."
 }

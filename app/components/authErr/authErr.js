@@ -4,7 +4,7 @@ import {Component, View, NgZone, NgIf, FORM_DIRECTIVES}from 'angular2/angular2';
 
 import {Login} from 'components/login/login';
 
-var ipc = require('ipc');
+let ipc = require('electron').ipcRenderer;
 
 /*start-non-standard*/
 @Component({

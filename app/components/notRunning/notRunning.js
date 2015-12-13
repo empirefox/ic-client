@@ -1,7 +1,7 @@
 'use strict';
 import {Component, View} from 'angular2/angular2';
 
-var ipc = require('ipc');
+let ipc = require('electron').ipcRenderer;
 
 /*start-non-standard*/
 @Component({

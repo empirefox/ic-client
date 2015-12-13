@@ -1,23 +1,23 @@
 {
   "private": true,
   "devDependencies": {
-    "asar": ">=0.8.0",
-    "electron-prebuilt": ">=0.34.2",
+    "asar": ">=0.8.3",
+    "electron-prebuilt": ">=0.35.2",
     "fs-jetpack": ">=0.7.0",
     "gulp": ">=3.9.0",
-    "gulp-babel": ">=5.2.1",
-    "gulp-load-plugins": ">=1.0.0",
+    "gulp-babel": "^5.3.0",
+    "gulp-load-plugins": ">=1.1.0",
     "gulp-rename": ">=1.2.2",
     "gulp-run": ">=1.6.11",
     "gulp-sourcemaps": ">=1.6.0",
     "gulp-stylus": ">=2.1.0",
-    "gulp-util": ">=3.0.6",
-    "jspm": ">=0.16.14",
+    "gulp-util": ">=3.0.7",
+    "jspm": ">=0.16.15",
     "q": ">=2.0.3",
     "string": ">=3.3.1",
-    "sync-request": ">=2.0.1",
+    "sync-request": ">=2.1.0",
     "tree-kill": ">=1.0.0",
-    "yargs": ">=3.27.0"
+    "yargs": ">=3.30.0"
   },
   "optionalDependencies": {
     "appdmg": ">=0.3.4",

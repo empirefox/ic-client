@@ -9,7 +9,7 @@ import {AuthErr} from 'components/authErr/authErr';
 import {Running} from 'components/running/running';
 import {Waiting} from 'components/waiting/waiting';
 
-var ipc = require('ipc');
+let ipc = require('electron').ipcRenderer;
 
 /*start-non-standard*/
 @Component({
@@ -27,7 +27,7 @@ export class Status {
   constructor(zone: NgZone) {
     this.status = 'not_running';
     this.tag = 'not-running';
-    ipc.on('room-status', status => {
+    ipc.on('room-status', (event, status) => {
       zone.run(() => {
         switch (status) {
         case 'connecting':

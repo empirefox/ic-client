@@ -1,18 +1,20 @@
 'use strict';
 
+var fs = require('fs');
 var url = require('url');
 var kill = require('tree-kill');
 var path = require('path');
-var app = require('app');
-var ipc = require('ipc');
-var shell = require('shell');
 var exec = require('child_process').exec;
-var BrowserWindow = require('browser-window');
+var electron = require('electron');
+var app = electron.app;
+var ipcMain = electron.ipcMain;
+var shell = electron.shell;
+var BrowserWindow = electron.BrowserWindow;
 var env = require('./vendor/electron_boilerplate/env_config');
 var devHelper = require('./vendor/electron_boilerplate/dev_helper');
 var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
 
-require('crash-reporter').start();
+electron.crashReporter.start();
 
 var apiOriginParser = url.parse(env.apiOrigin);
 var http = require(apiOriginParser.protocol.split(':')[0]);
@@ -29,7 +31,7 @@ var isFinish;
 var reconnectTimes = 0;
 var reconnectTimeoutObj;
 
-app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
+// app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
 function sendToWindow(channel, msg) {
   if (mainWindow) {
@@ -68,10 +70,16 @@ function quit(type) {
 }
 
 function startRoom() {
-  var roomArgs = env.roomDb ? `-cpath="${env.roomDb}"` : '';
-  var dir = path.join(app.getPath('exe'), '..');
-  console.log(`exec: ${dir}/${env.roomBinName} ${roomArgs}`);
-  exec(`${dir}/${env.roomBinName} ${roomArgs}`);
+  let dataDir = app.getPath('userData');
+  fs.stat(dataDir, (err, stat) => {
+    if(err || !stat || !stat.isDirectory()) {
+      fs.mkdirSync(dataDir);
+    }
+    let binDir = path.join(app.getPath('exe'), '..');
+    let cmd = `${binDir}/${env.roomBinName} -cpath="${dataDir}/${env.roomDb}"`
+    console.log(`exec: ${cmd}`);
+    exec(cmd);
+  });
 }
 startRoom();
 
@@ -146,7 +154,7 @@ try {
 }
 
 // used by login to save reg-token
-ipc.on('xreq', (event, xreq) => {
+ipcMain.on('xreq', (event, xreq) => {
   let options = {
     hostname: apiOriginParser.hostname,
     port: apiOriginParser.port,
@@ -160,7 +168,6 @@ ipc.on('xreq', (event, xreq) => {
     let reply = '';
     res.on('data', chunk => reply += chunk);
     res.on('end', () => {
-      console.log(reply);
       if (reply) {
         sendToRoom({
           type: 'SetRegToken',
@@ -176,7 +183,7 @@ ipc.on('xreq', (event, xreq) => {
   });
 });
 // used by authErr to reg room
-ipc.on('reg-room', (event, name) => {
+ipcMain.on('reg-room', (event, name) => {
   sendToRoom({
     type: 'DoRegRoom',
     content: {
@@ -185,56 +192,56 @@ ipc.on('reg-room', (event, name) => {
   });
 });
 // used by authErr
-ipc.on('get-regable', () => {
+ipcMain.on('get-regable', () => {
   sendToRoom({
     type: 'GetRegable',
   });
 });
 // used by noConnection
-ipc.on('do-connect', () => {
+ipcMain.on('do-connect', () => {
   sendToRoom({
     type: 'DoConnect',
   });
 });
 // used by notRunning
-ipc.on('start-room', () => startRoom());
+ipcMain.on('start-room', () => startRoom());
 // used by running
-ipc.on('remove-room', () => {
+ipcMain.on('remove-room', () => {
   sendToRoom({
     type: 'DoRemoveRoom',
   });
 });
 // used by running
-ipc.on('open-rec-dir', () => shell.openItem(roomInfo.recDir));
+ipcMain.on('open-rec-dir', () => shell.openItem(roomInfo.recDir));
 // used by waiting, login
-ipc.on('get-status', () => {
+ipcMain.on('get-status', () => {
   sendToRoom({
     type: 'GetStatus',
   });
 });
 // used by navbar
-ipc.on('get-rec-enabled', () => {
+ipcMain.on('get-rec-enabled', () => {
   sendToRoom({
     type: 'GetRecEnabled',
   });
 });
 // used by navbar
-ipc.on('set-rec-enabled', (event, enabled) => {
+ipcMain.on('set-rec-enabled', (event, enabled) => {
   sendToRoom({
     type: 'SetRecEnabled',
     content: enabled,
   });
 });
 // used by navbar
-ipc.on('remove-reg-token', () => {
+ipcMain.on('remove-reg-token', () => {
   sendToRoom({
     type: 'DoRemoveRegToken',
   });
 });
 // used by navbar
-ipc.on('term', () => quit('Exit'));
+ipcMain.on('term', () => quit('Exit'));
 // used by navbar
-ipc.on('close', () => quit('Close'));
+ipcMain.on('close', () => quit('Close'));
 
 // Preserver of the window size and position between app launches.
 var mainWindowState = windowStateKeeper('main', {
@@ -254,7 +261,7 @@ app.on('ready', () => {
     mainWindow.maximize();
   }
 
-  mainWindow.loadUrl(`file://${__dirname}/app.html`);
+  mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   if (env.name === 'development' || env.name === 'devremote') {
     devHelper.setDevMenu();

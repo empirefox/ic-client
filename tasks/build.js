@@ -102,10 +102,16 @@ gulp.task('finalize', ['clean'], function () {
   envConfig.roomBinName = roomConfig.name;
   switch (utils.getEnvName()) {
   case 'devremote':
-  case 'development':
-  case 'test':
-    envConfig.roomDb = roomConfig.devWorkingDb;
+    envConfig.roomDb = roomConfig.name + '-devremote.db';
     break;
+  case 'development':
+    envConfig.roomDb = roomConfig.name + '-dev.db';
+    break;
+  case 'test':
+    envConfig.roomDb = roomConfig.name + '-test.db';
+    break;
+  case 'production':
+    envConfig.roomDb = roomConfig.name + '.db';
   }
   destDir.write('env_config.json', envConfig);
 });

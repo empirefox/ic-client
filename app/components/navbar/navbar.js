@@ -1,7 +1,7 @@
 'use strict';
 import {Component, View, NgZone, bootstrap} from 'angular2/angular2';
 
-var ipc = require('ipc');
+let ipc = require('electron').ipcRenderer;
 
 /*start-non-standard*/
 @Component({
@@ -19,7 +19,7 @@ export class Navbar {
     this.rec = 1;
     this.toggleRecBtnDiabled = 1;
     this.toggleRecTxt = '切换录像';
-    ipc.on('rec-enabled', (rec) => {
+    ipc.on('rec-enabled', (event, rec) => {
       zone.run(() => {
         this.rec = rec;
         if (rec) {
