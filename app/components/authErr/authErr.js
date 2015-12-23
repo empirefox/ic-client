@@ -1,6 +1,7 @@
 'use strict';
 
-import {Component, View, NgZone, NgIf, FORM_DIRECTIVES}from 'angular2/angular2';
+import {Component, View, NgZone}from 'angular2/core';
+import {NgIf, FORM_DIRECTIVES} from 'angular2/common';
 
 import {Login} from 'components/login/login';
 

@@ -1,5 +1,6 @@
 'use strict';
-import {Component, View, NgZone, bootstrap} from 'angular2/angular2';
+import {Component, View, NgZone, enableProdMode} from 'angular2/core';
+import {bootstrap} from 'angular2/platform/browser';
 
 let ipc = require('electron').ipcRenderer;
 
@@ -56,4 +57,5 @@ export class Navbar {
   }
 }
 
+// enableProdMode();
 bootstrap(Navbar);

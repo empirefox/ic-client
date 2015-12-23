@@ -1,17 +1,17 @@
-<div [ng-switch]="tag">
-  <template [ng-switch-when]="'waiting'">
+<div [ngSwitch]="tag">
+  <template [ngSwitchWhen]="'waiting'">
     <waiting [status]='status'></waiting>
   </template>
-  <template [ng-switch-when]="'no-connection'">
+  <template [ngSwitchWhen]="'no-connection'">
     <no-connection [status]='status'></no-connection>
   </template>
-  <template [ng-switch-when]="'auth-err'">
+  <template [ngSwitchWhen]="'auth-err'">
     <auth-err [status]='status'></auth-err>
   </template>
-  <template [ng-switch-when]="'running'">
+  <template [ngSwitchWhen]="'running'">
     <running></running>
   </template>
-  <template [ng-switch-when]="'not-running'">
+  <template [ngSwitchWhen]="'not-running'">
     <not-running></not-running>
   </template>
 </div>

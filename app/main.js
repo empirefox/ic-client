@@ -14,10 +14,9 @@ var env = require('./vendor/electron_boilerplate/env_config');
 var devHelper = require('./vendor/electron_boilerplate/dev_helper');
 var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
 
-electron.crashReporter.start();
-
 var apiOriginParser = url.parse(env.apiOrigin);
 var http = require(apiOriginParser.protocol.split(':')[0]);
+let recDir = path.join(app.getPath('home'), env.recDir);
 
 // TODO insecure adapt
 global.WebSocket = require('ws');
@@ -70,15 +69,29 @@ function quit(type) {
 }
 
 function startRoom() {
-  let dataDir = app.getPath('userData');
-  fs.stat(dataDir, (err, stat) => {
-    if(err || !stat || !stat.isDirectory()) {
-      fs.mkdirSync(dataDir);
+  fs.stat(recDir, (err, stat) => {
+    if (err || !stat || !stat.isDirectory()) {
+      fs.mkdirSync(recDir);
     }
-    let binDir = path.join(app.getPath('exe'), '..');
-    let cmd = `${binDir}/${env.roomBinName} -cpath="${dataDir}/${env.roomDb}"`
-    console.log(`exec: ${cmd}`);
-    exec(cmd);
+
+    let dataDir = app.getPath('userData');
+    fs.stat(dataDir, (err, stat) => {
+      if (err || !stat || !stat.isDirectory()) {
+        fs.mkdirSync(dataDir);
+      }
+
+      let bin = path.join(app.getPath('exe'), '..', env.roomBinName);
+      let setup = JSON.stringify({
+        "DbPath": path.join(dataDir, env.roomDb),
+        "RecDir": recDir,
+        "Server": apiOriginParser.host,
+        "TlsOn": apiOriginParser.protocol === 'https',
+        "PingSecond": env.pingSecond,
+      });
+      let cmd = `${bin} -setup='${setup}'`;
+      console.log(`exec: ${cmd}`);
+      exec(cmd);
+    });
   });
 }
 startRoom();
@@ -168,10 +181,16 @@ ipcMain.on('xreq', (event, xreq) => {
     let reply = '';
     res.on('data', chunk => reply += chunk);
     res.on('end', () => {
-      if (reply) {
+      let rj;
+      try {
+        rj = JSON.parse(reply).token;
+      } catch (e) {
+        sendToWindow('xreq-failed', 'reply: ' + reply);
+      }
+      if (rj) {
         sendToRoom({
           type: 'SetRegToken',
-          content: JSON.parse(reply).token,
+          content: rj,
         });
       }
     });
@@ -212,7 +231,7 @@ ipcMain.on('remove-room', () => {
   });
 });
 // used by running
-ipcMain.on('open-rec-dir', () => shell.openItem(roomInfo.recDir));
+ipcMain.on('open-rec-dir', () => shell.openItem(recDir));
 // used by waiting, login
 ipcMain.on('get-status', () => {
   sendToRoom({
@@ -271,6 +290,7 @@ app.on('ready', () => {
   mainWindow.webContents.on('crashed', (event) => console.log('mainWindow crashed:', event));
 
   mainWindow.on('close', () => mainWindowState.saveState(mainWindow));
+  mainWindow.on('closed', () => mainWindow = null);
 });
 
 app.on('window-all-closed', () => quit('Close'));

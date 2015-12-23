@@ -1,6 +1,8 @@
 'use strict';
 
-import {Component, View, NgZone, NgSwitch, NgSwitchWhen, bootstrap} from 'angular2/angular2';
+import {Component, View, NgZone, enableProdMode} from 'angular2/core';
+import {NgSwitch, NgSwitchWhen} from 'angular2/common';
+import {bootstrap} from 'angular2/platform/browser';
 import {HTTP_PROVIDERS} from 'angular2/http';
 
 import {NotRunning} from 'components/notRunning/notRunning';
@@ -67,4 +69,5 @@ export class Status {
   }
 }
 
+// enableProdMode();
 bootstrap(Status, [HTTP_PROVIDERS]);

@@ -1,10 +1,10 @@
-<div *ng-if="regable&&!reging">
-  <form #f="form" (submit)='onRegRoom(f.value)'>
+<div *ngIf="regable&&!reging">
+  <form #f="ngForm" (submit)='onRegRoom(f.value)'>
     监控室名称
-    <input ng-control='name' type='text' placeholder='监控室名称, 如：后院'>
-    <div *ng-if="!f.valid">名称不正确</div>
+    <input ngControl='name' type='text' placeholder='监控室名称, 如：后院'>
+    <div *ngIf="!f.valid">名称不正确</div>
     <button type='submit'>注册监控室</button>
   </form>
   <h4>{{txt}}</h4>
 </div>
-<login [status]='status' *ng-if="!regable"></login>
+<login [status]='status' *ngIf="!regable"></login>

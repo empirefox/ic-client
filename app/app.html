@@ -8,6 +8,8 @@
   <link href="vendor/nvs/style.css" rel="stylesheet" type="text/css">
   <link href="./stylesheets/main.css" rel="stylesheet" type="text/css">
 
+  <script src="jspm_packages/npm/zone.js@0.5.10/dist/zone.js"></script>
+  <script src="jspm_packages/npm/reflect-metadata@0.1.2/Reflect.js"></script>
   <script src="vendor/electron_boilerplate/env_config.js"></script>
   <script src="vendor/electron_boilerplate/context_menu.js"></script>
   <script src="vendor/electron_boilerplate/external_links.js"></script>
@@ -21,11 +23,13 @@
 
   <script src="jspm_packages/system.src.js"></script>
   <script src="config.js"></script>
+  <script src="jspm_packages/npm/rxjs@5.0.0-beta.0/bundles/Rx.js"></script>
+  <script src="jspm_packages/npm/angular2@2.0.0-beta.0/bundles/angular2.dev.js"></script>
   <script>
     Promise.all([
-      System.import('reflect-metadata'),
-      System.import('@reactivex/rxjs'),
-      System.import('zone.js')
+      System.import('traceur-runtime'),
+      System.import('traceur'),
+      System.import('rxjs/add/operator/map')
     ]).then(() => {
       return Promise.all([
         System.import('components/status/status'),

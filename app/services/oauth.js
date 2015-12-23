@@ -53,7 +53,7 @@ export class Provider {
         throw new Error('OAuth "state" mismatch');
       }
       return this.exchangeForToken(oauthData);
-    }).catch(err => this.sp.createLoginView('data:text/plain,' + err));
+    }).catch(err => this.createLoginView('data:text/plain,' + err));
   }
 
   buildAuthorizeUrl() {

@@ -79,6 +79,7 @@ gulp.task('stylus-watch', stylusTask);
 
 gulp.task('finalize', ['clean'], function () {
   var manifest = srcDir.read('package.json', 'json');
+
   switch (utils.getEnvName()) {
   case 'devremote':
   case 'development':
@@ -124,29 +125,11 @@ gulp.task('watch', function () {
   gulp.watch('app/**/*.styl', ['stylus-watch']);
 });
 
-gulp.task('copyRoomDb', function () {
-  switch (utils.getEnvName()) {
-  case 'devremote':
-    jetpack.copy(roomConfig.devRemoteDb, roomConfig.devWorkingDb, {
-      overwrite: true,
-    });
-    break;
-  case 'development':
-  case 'test':
-    jetpack.copy(roomConfig.devDb, roomConfig.devWorkingDb, {
-      overwrite: true,
-    });
-    break;
-  }
-});
-
-gulp.task('copyRoomBin', function () {
+gulp.task('copyRoom', function () {
   return gulp.src(roomConfig[utils.os()].bin).pipe($.rename({
     basename: roomConfig.name,
   })).pipe(gulp.dest(roomConfig.electron));
 });
-
-gulp.task('copyRoom', ['copyRoomDb', 'copyRoomBin']);
 
 gulp.task('build', ['transpile', 'stylus', 'copy', 'oauth', 'finalize']);
 

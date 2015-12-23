@@ -3,5 +3,7 @@
   "siteOrigin": "https://www.gogogocam.com",
   "oauth": "https://www.gogogocam.com/js/api-data.json",
   "apiOrigin": "https://gocamcom.daoapp.io",
-  "description": "Add here any environment specific stuff you like."
+  "description": "Add here any environment specific stuff you like.",
+  "recDir": "ipcam-records-devremote",
+  "pingSecond": 45
 }
