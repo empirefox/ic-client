@@ -12,9 +12,11 @@ module.exports = function (name, defaults) {
 
   let stateStoreFile = path.join(app.getPath('userData'), `window-state-${name}.json`);
 
-  let state = fs.readJsonSync(stateStoreFile, {
-    throws: false,
-  }) || {
+  let state;
+  try {
+    state = fs.readJsonSync(stateStoreFile);
+  } catch (e) {}
+  state = state || {
     width: defaults.width,
     height: defaults.height,
   };
