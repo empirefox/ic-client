@@ -1,6 +1,6 @@
 'use strict';
 
-var fs = require('fs');
+var fs = require('fs-extra');
 var url = require('url');
 var kill = require('tree-kill');
 var path = require('path');
@@ -14,10 +14,7 @@ var env = require('./vendor/electron_boilerplate/env_config');
 var devHelper = require('./vendor/electron_boilerplate/dev_helper');
 var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
 
-var apiOriginParser = url.parse(env.apiOrigin);
-var http = require(apiOriginParser.protocol.split(':')[0]);
 let recDir = path.join(app.getPath('home'), env.recDir);
-
 // TODO insecure adapt
 global.WebSocket = require('ws');
 global.window = {};
@@ -69,25 +66,28 @@ function quit(type) {
 }
 
 function startRoom() {
-  fs.stat(recDir, (err, stat) => {
-    if (err || !stat || !stat.isDirectory()) {
-      fs.mkdirSync(recDir);
+  fs.ensureDir(recDir, err => {
+    if (err) {
+      console.log(err);
+      return;
     }
 
     let dataDir = app.getPath('userData');
-    fs.stat(dataDir, (err, stat) => {
-      if (err || !stat || !stat.isDirectory()) {
-        fs.mkdirSync(dataDir);
+    fs.ensureDir(dataDir, err => {
+      if (err) {
+        console.log(err);
+        return;
       }
 
-      let bin = path.join(app.getPath('exe'), '..', env.roomBinName);
+      // config.go
       let setup = JSON.stringify({
         "DbPath": path.join(dataDir, env.roomDb),
         "RecDir": recDir,
-        "Server": apiOriginParser.host,
-        "TlsOn": apiOriginParser.protocol === 'https',
+        "WsUrl": env.apiWsUrl,
         "PingSecond": env.pingSecond,
+        "Stuns": env.stuns,
       });
+      let bin = path.join(app.getPath('exe'), '..', env.roomBinName);
       let cmd = `${bin} -setup='${setup}'`;
       console.log(`exec: ${cmd}`);
       exec(cmd);
@@ -168,16 +168,7 @@ try {
 
 // used by login to save reg-token
 ipcMain.on('xreq', (event, xreq) => {
-  let options = {
-    hostname: apiOriginParser.hostname,
-    port: apiOriginParser.port,
-    path: xreq.path,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-  let req = http.request(options, res => {
+  let req = require(xreq.protocol).request(xreq.options, res => {
     let reply = '';
     res.on('data', chunk => reply += chunk);
     res.on('end', () => {
@@ -265,7 +256,7 @@ ipcMain.on('close', () => quit('Close'));
 // Preserver of the window size and position between app launches.
 var mainWindowState = windowStateKeeper('main', {
   width: 800,
-  height: 450,
+  height: 500,
 });
 
 app.on('ready', () => {

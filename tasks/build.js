@@ -13,6 +13,7 @@ var jetpack = require('fs-jetpack');
 var utils = require('./utils');
 var config = require('./gulp.config')();
 var roomConfig = require('./room.config')();
+var apiData = require('./api-data');
 
 var projectDir = jetpack;
 var srcDir = projectDir.cwd('./app');
@@ -63,8 +64,6 @@ var copyTask = function () {
 gulp.task('copy', ['clean'], copyTask);
 gulp.task('copy-watch', copyTask);
 
-gulp.task('oauth', ['clean'], require('./oauth'));
-
 gulp.task('transpile', ['clean'], transpileTask);
 gulp.task('transpile-watch', transpileTask);
 
@@ -78,7 +77,7 @@ gulp.task('stylus', ['clean'], stylusTask);
 gulp.task('stylus-watch', stylusTask);
 
 gulp.task('finalize', ['clean'], function () {
-  var manifest = srcDir.read('package.json', 'json');
+  let manifest = srcDir.read('package.json', 'json');
 
   switch (utils.getEnvName()) {
   case 'devremote':
@@ -99,7 +98,8 @@ gulp.task('finalize', ['clean'], function () {
   }
   destDir.write('package.json', manifest);
 
-  var envConfig = projectDir.read('config/env_' + utils.getEnvName() + '.json', 'json');
+  let envConfigRaw = projectDir.read('config/env_' + utils.getEnvName() + '.json', 'json');
+  let envConfig = Object.assign(apiData(), envConfigRaw);
   envConfig.roomBinName = roomConfig.name;
   switch (utils.getEnvName()) {
   case 'devremote':
@@ -131,6 +131,6 @@ gulp.task('copyRoom', function () {
   })).pipe(gulp.dest(roomConfig.electron));
 });
 
-gulp.task('build', ['transpile', 'stylus', 'copy', 'oauth', 'finalize']);
+gulp.task('build', ['transpile', 'stylus', 'copy', 'finalize']);
 
 gulp.task('default', ['build']);

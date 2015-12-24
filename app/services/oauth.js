@@ -1,12 +1,15 @@
 'use strict';
 
-import {Http} from 'angular2/http';
+import {
+  Http
+}
+from 'angular2/http';
 
 let ipc = require('electron').ipcRenderer;
 let url = require('url');
 let querystring = require('querystring');
 let S = require('string');
-let providers = require('./oauth_providers.json');
+let providers = window.env.providers;
 
 export class Provider {
   constructor(http, sp, selector) {
@@ -94,7 +97,8 @@ export class Provider {
         reject(err);
       });
       ipc.send('xreq', {
-        path: this.sp.path,
+        protocol: this.sp.protocol,
+        options: this.sp.request,
         body: JSON.stringify(data),
       });
     });

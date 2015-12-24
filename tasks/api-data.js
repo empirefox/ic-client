@@ -1,5 +1,6 @@
 'use strict';
 
+var url = require('url');
 var jetpack = require('fs-jetpack');
 var request = require('sync-request');
 var utils = require('./utils');
@@ -32,17 +33,35 @@ function cleanObject(obj) {
 module.exports = function () {
   let res = request('GET', env.oauth);
   let apiData = JSON.parse(res.getBody());
-  let start = 'PAGE.LOGIN.OAUTH.'.length;
+  let apiOriginParser = url.parse(apiData.ApiOrigin);
+  let proxyParser = url.parse(apiData.ProxyAuthServer);
 
   let providers = apiData.Providers.map(p => {
+    let parser = p.Proxied ? proxyParser : apiOriginParser;
+    let protocol = parser.protocol.slice(0, -1);
+    if (protocol !== 'http' && protocol !== 'https') {
+      throw new Error(`protocol[${protocol}] is not http or https`);
+    }
     // map Port from many/satellizer-factory.js
     let over = cleanObject({
       name: p.Name,
-      path: p.Path,
       clientId: p.ClientID,
       scope: p.Scope,
-      redirectUri: p.RedirectURL ? p.RedirectURLreplace(/about:\/\/blank/g, env.siteOrigin) : env.siteOrigin,
+      redirectUri: p.RedirectURL ? p.RedirectURL.replace(/about:\/\/blank/g, env.siteOrigin) : env.siteOrigin,
       authorizationEndpoint: p.AuthURL,
+
+      // protocol to require
+      protocol: protocol,
+      // request options
+      request: {
+        hostname: parser.hostname,
+        port: parser.port,
+        path: p.Path,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
 
       icon: p.Icon,
       text: apiData.Translates[p.Name],
@@ -53,5 +72,12 @@ module.exports = function () {
     return Object.assign({}, defaults, sp, over);
   });
 
-  destDir.write('oauth_providers.json', providers);
+  let pSuffix = apiOriginParser.protocol.slice(4);
+  // will exported to env_config.json
+  return {
+    apiOrigin: apiData.ApiOrigin,
+    apiWsUrl: `ws${pSuffix}//${apiOriginParser.host}`,
+    stuns: apiData.Stuns,
+    providers: providers,
+  };
 };
