@@ -96,8 +96,8 @@ function onRegable(status) {
   }
 }
 
-function onRecEnabled(enabled) {
-  sendToWindow('rec-enabled', enabled);
+function onRec(recObj) {
+  sendToWindow('rec-changed', recObj);
 }
 
 try {
@@ -140,8 +140,8 @@ try {
     case 'Regable':
       onRegable(statusObj.content);
       break;
-    case 'RecEnabled':
-      onRecEnabled(statusObj.content);
+    case 'Rec':
+      onRec(statusObj);
       break;
     case 'RoomInfo':
       roomInfo = statusObj.content;
@@ -176,9 +176,7 @@ ipcMain.on('xreq', (event, xreq) => {
   });
   req.write(xreq.body);
   req.end();
-  req.on('error', err => {
-    sendToWindow('xreq-failed', JSON.stringify(err));
-  });
+  req.on('error', err => sendToWindow('xreq-failed', JSON.stringify(err)));
 });
 // used by authErr to reg room
 ipcMain.on('reg-room', (event, name) => {
@@ -202,7 +200,7 @@ ipcMain.on('do-connect', () => {
   });
 });
 // used by notRunning
-ipcMain.on('start-room', () => startRoom());
+ipcMain.on('start-room', startRoom);
 // used by running
 ipcMain.on('remove-room', () => {
   sendToRoom({
@@ -210,24 +208,25 @@ ipcMain.on('remove-room', () => {
   });
 });
 // used by running
-ipcMain.on('open-rec-dir', () => shell.openItem(recDir));
+ipcMain.on('open-rec-dir', () => utils.ensureDir(recDir).then(() => shell.openItem(recDir)));
 // used by waiting, login
 ipcMain.on('get-status', () => {
   sendToRoom({
     type: 'GetStatus',
   });
 });
-// used by navbar
-ipcMain.on('get-rec-enabled', () => {
+// used by Cameras
+ipcMain.on('get-cameras', () => {
   sendToRoom({
-    type: 'GetRecEnabled',
+    type: 'GetCameras',
   });
 });
-// used by navbar
-ipcMain.on('set-rec-enabled', (event, enabled) => {
-  sendToRoom({
-    type: 'SetRecEnabled',
-    content: enabled,
+ipcMain.on('set-rec', (event, arg) => {
+  utils.ensureDir(recDir).then(() => {
+    sendToRoom({
+      type: arg.rec ? 'SetRecOff' : 'SetRecOn',
+      content: arg.id,
+    });
   });
 });
 // used by navbar

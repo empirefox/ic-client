@@ -1,5 +1,6 @@
 'use strict';
-import {Component, View, bootstrap} from 'angular2/core';
+import {Component, View} from 'angular2/core';
+import {bootstrap} from 'angular2/platform/browser';
 
 /*start-non-standard*/
 @Component({

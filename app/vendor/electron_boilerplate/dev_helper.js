@@ -24,13 +24,13 @@ module.exports.setDevMenu = function () {
       label: 'Reload',
       accelerator: 'CmdOrCtrl+R',
       click: function () {
-        BrowserWindow.getFocusedWindow().reloadIgnoringCache();
+        BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache();
       }
     }, {
       label: 'Toggle DevTools',
       accelerator: 'Alt+CmdOrCtrl+I',
       click: function () {
-        BrowserWindow.getFocusedWindow().toggleDevTools();
+        BrowserWindow.getFocusedWindow().webContents.toggleDevTools();
       }
     }, {
       label: 'Quit',

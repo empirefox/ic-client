@@ -1,10 +1,18 @@
 <nav>
   <div class="nav-wrapper">
     <ul class="right">
-      <li><a (click)='toggleRec();$event.preventDefault()' href>{{toggleRecTxt}}</a></li>
-      <li><a (click)='removeRegToken();$event.preventDefault()' href>清除用户登录状态</a></li>
-      <li><a (click)='close();$event.preventDefault()' href>关闭窗口</a></li>
-      <li><a (click)='term();$event.preventDefault()' href>退出</a></li>
+      <li>
+        <span (click)='onToggleCameras()' class="menu-item">切换录像</span>
+      </li>
+      <li>
+        <span (click)='removeRegToken()' class="menu-item">清除用户登录状态</span>
+      </li>
+      <li>
+        <span (click)='close()' class="menu-item">关闭窗口</span>
+      </li>
+      <li>
+        <span (click)='term()' class="menu-item">退出</span>
+      </li>
     </ul>
   </div>
 </nav>

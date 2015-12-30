@@ -1,4 +1,4 @@
-html, body {
+html, body, .view {
   width: 100%;
   margin: 0;
   padding: 0;
@@ -79,6 +79,10 @@ nav ul a {
 }
 nav ul.left {
   float: left;
+}
+.menu-item{
+  cursor: pointer;
+  padding: 10px;
 }
 
 /*login*/

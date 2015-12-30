@@ -1,9 +1,7 @@
 'use strict';
 
-import {Component, View, NgZone, enableProdMode} from 'angular2/core';
+import {Component, View, NgZone} from 'angular2/core';
 import {NgSwitch, NgSwitchWhen} from 'angular2/common';
-import {bootstrap} from 'angular2/platform/browser';
-import {HTTP_PROVIDERS} from 'angular2/http';
 
 import {NotRunning} from 'components/notRunning/notRunning';
 import {NoConnection} from 'components/noConnection/noConnection';
@@ -68,6 +66,3 @@ export class Status {
     ipc.send('get-status');
   }
 }
-
-// enableProdMode();
-bootstrap(Status, [HTTP_PROVIDERS]);

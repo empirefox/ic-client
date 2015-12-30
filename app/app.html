@@ -16,10 +16,7 @@
 </head>
 
 <body>
-  <navbar class="navbar"></navbar>
-  <div class="container">
-    <status class="row"></status>
-  </div>
+  <view class="view"></view>
 
   <script src="jspm_packages/system.src.js"></script>
   <script src="config.js"></script>
@@ -32,8 +29,7 @@
       System.import('rxjs/add/operator/map')
     ]).then(() => {
       return Promise.all([
-        System.import('components/status/status'),
-        System.import('components/navbar/navbar')
+        System.import('components/view/view')
       ]).catch(console.log.bind(console));
     });
   </script>

@@ -1,0 +1,7 @@
+<div *ngIf='show'>
+  <ul>
+    <li *ngFor="#camera of list">
+      <input type="checkbox" (change)='onSetRec(camera)' [(ngModel)]='camera.rec' />{{camera.Id}}
+    </li>
+  </ul>
+</div>
