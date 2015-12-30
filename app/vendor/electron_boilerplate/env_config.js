@@ -4,12 +4,12 @@
 'use strict';
 
 (function () {
-  var fs = require('fs-extra');
+  var jsonfile = require('jsonfile');
   if (typeof window === 'object') {
     // Web browser context, __dirname points to folder where app.html file is.
-    window.env = fs.readJsonSync(__dirname + '/env_config.json');
+    window.env = jsonfile.readFileSync(__dirname + '/env_config.json');
   } else {
     // Node context
-    module.exports = fs.readJsonSync(__dirname + '/../../env_config.json');
+    module.exports = jsonfile.readFileSync(__dirname + '/../../env_config.json');
   }
 }());

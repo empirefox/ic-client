@@ -9,18 +9,6 @@ var projectDir = jetpack;
 var destDir = projectDir.cwd('./build');
 var env = projectDir.read('config/env_' + utils.getEnvName() + '.json', 'json');
 
-// port from satellizer.js factory SatellizerOauth2
-var defaults = {
-  defaultUrlParams: ['response_type', 'client_id', 'redirect_uri'],
-  responseType: 'code',
-  responseParams: {
-    code: 'code',
-    clientId: 'clientId',
-    redirectUri: 'redirectUri'
-  },
-  state: () => Math.random().toString(36).slice(2),
-};
-
 function cleanObject(obj) {
   for (var k in obj) {
     if (obj[k] === undefined) {
@@ -45,14 +33,13 @@ module.exports = function () {
     // map Port from many/satellizer-factory.js
     let over = cleanObject({
       name: p.Name,
-      clientId: p.ClientID,
-      scope: p.Scope,
+      authorizationURL: p.AuthUrlTpl.replace(/about:\/\/blank/g, env.siteOrigin),
+      state: p.AuthUrlTpl.endsWith('state='),
       redirectUri: p.RedirectURL ? p.RedirectURL.replace(/about:\/\/blank/g, env.siteOrigin) : env.siteOrigin,
-      authorizationEndpoint: p.AuthURL,
 
       // protocol to require
       protocol: protocol,
-      // request options
+      // request options for exchangeForToken
       request: {
         hostname: parser.hostname,
         port: parser.port,
@@ -67,9 +54,8 @@ module.exports = function () {
       text: apiData.Translates[p.Name],
       btn: p.Btn,
     });
-    let sp = apiData.Satellizers[p.Name];
 
-    return Object.assign({}, defaults, sp, over);
+    return over;
   });
 
   let pSuffix = apiOriginParser.protocol.slice(4);

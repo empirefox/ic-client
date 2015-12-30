@@ -8,7 +8,6 @@ from 'angular2/http';
 let ipc = require('electron').ipcRenderer;
 let url = require('url');
 let querystring = require('querystring');
-let S = require('string');
 let providers = window.env.providers;
 
 export class Provider {
@@ -19,6 +18,13 @@ export class Provider {
     this.icon = sp.icon;
     this.text = sp.text;
     this.btn = sp.btn;
+    this.stateName = sp.name + '_state';
+    this.state = null;
+    this.responseParams = Object.assign({
+      code: 'code',
+      clientId: 'clientId',
+      redirectUri: 'redirectUri',
+    }, sp.responseParams);
   }
 
   authenticate() {
@@ -50,8 +56,7 @@ export class Provider {
     });
 
     return promise.then(oauthData => {
-      let stateName = this.sp.name + '_state';
-      if (oauthData.state && oauthData.state !== window.localStorage.getItem(stateName)) {
+      if (this.state && oauthData.state !== this.state) {
         this.createLoginView('data:text/plain,OAuth "state" mismatch');
         throw new Error('OAuth "state" mismatch');
       }
@@ -60,23 +65,19 @@ export class Provider {
   }
 
   buildAuthorizeUrl() {
-    let stateName = this.sp.name + '_state';
-    window.localStorage.setItem(stateName, this.state());
-    return [this.sp.authorizationEndpoint, this.buildQueryString()].join('?');
+    return this.sp.state ? this.sp.authorizationURL + this.stater() : this.sp.authorizationURL;
   }
 
+  // fork from satellizer
   exchangeForToken(oauthData) {
     var data = Object.assign({}, oauthData);
-    var paramNames = this.sp.responseParams;
+    var paramNames = this.responseParams;
 
     for (let key in paramNames) {
       let value = paramNames[key];
       switch (key) {
       case 'code':
         data[value] = oauthData.code;
-        break;
-      case 'clientId':
-        data[value] = this.sp.clientId;
         break;
       case 'redirectUri':
         data[value] = this.sp.redirectUri;
@@ -110,37 +111,8 @@ export class Provider {
     return loginview.firstElementChild;
   }
 
-  state() {
-    return Math.random().toString(36).slice(2);
-  }
-
-  // port from satellizer
-  buildQueryString() {
-    let keyValuePairs = {};
-    ['defaultUrlParams', 'requiredUrlParams', 'optionalUrlParams'].forEach(params => {
-
-      this.sp[params] && this.sp[params].forEach(paramName => {
-        let camelizedName = S(paramName).camelize().s;
-        let paramValue = typeof this.sp[paramName] === 'function' ? this.sp[paramName]() : this.sp[camelizedName];
-
-        if (paramName === 'state') {
-          let stateName = this.sp.name + '_state';
-          paramValue = window.localStorage.getItem(stateName);
-        }
-
-        if (paramName === 'scope' && Array.isArray(paramValue)) {
-          paramValue = paramValue.join(this.sp.scopeDelimiter);
-
-          if (this.sp.scopePrefix) {
-            paramValue = [this.sp.scopePrefix, paramValue].join(this.sp.scopeDelimiter);
-          }
-        }
-
-        keyValuePairs[paramName] = paramValue;
-      });
-    });
-
-    return querystring.stringify(keyValuePairs);
+  stater() {
+    return this.state = Math.random().toString(36).slice(2);
   }
 }
 

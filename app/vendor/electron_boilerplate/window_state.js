@@ -6,7 +6,7 @@
 
 let path = require('path');
 let app = require('app');
-let fs = require('fs-extra');
+let jsonfile = require('jsonfile');
 
 module.exports = function (name, defaults) {
 
@@ -14,7 +14,7 @@ module.exports = function (name, defaults) {
 
   let state;
   try {
-    state = fs.readJsonSync(stateStoreFile);
+    state = jsonfile.readFileSync(stateStoreFile);
   } catch (e) {}
   state = state || {
     width: defaults.width,
@@ -31,7 +31,7 @@ module.exports = function (name, defaults) {
       state.height = size[1];
     }
     state.isMaximized = win.isMaximized();
-    fs.outputJsonSync(stateStoreFile, state);
+    jsonfile.writeFileSync(stateStoreFile, state);
   };
 
   return {

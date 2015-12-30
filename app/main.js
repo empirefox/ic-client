@@ -1,6 +1,5 @@
 'use strict';
 
-var fs = require('fs-extra');
 var url = require('url');
 var kill = require('tree-kill');
 var path = require('path');
@@ -13,7 +12,9 @@ var BrowserWindow = electron.BrowserWindow;
 var env = require('./vendor/electron_boilerplate/env_config');
 var devHelper = require('./vendor/electron_boilerplate/dev_helper');
 var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
+var utils = require('./vendor/electron_boilerplate/utils');
 
+let dataDir = app.getPath('userData');
 let recDir = path.join(app.getPath('home'), env.recDir);
 // TODO insecure adapt
 global.WebSocket = require('ws');
@@ -66,33 +67,20 @@ function quit(type) {
 }
 
 function startRoom() {
-  fs.ensureDir(recDir, err => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-
-    let dataDir = app.getPath('userData');
-    fs.ensureDir(dataDir, err => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-
-      // config.go
-      let setup = JSON.stringify({
-        "DbPath": path.join(dataDir, env.roomDb),
-        "RecDir": recDir,
-        "WsUrl": env.apiWsUrl,
-        "PingSecond": env.pingSecond,
-        "Stuns": env.stuns,
-      });
-      let bin = path.join(app.getPath('exe'), '..', env.roomBinName);
-      let cmd = `${bin} -setup='${setup}'`;
-      console.log(`exec: ${cmd}`);
-      exec(cmd);
+  Promise.all([utils.ensureDir(recDir), utils.ensureDir(dataDir)]).then(() => {
+    // config.go
+    let setup = JSON.stringify({
+      "DbPath": path.join(dataDir, env.roomDb),
+      "RecDir": recDir,
+      "WsUrl": env.apiWsUrl,
+      "PingSecond": env.pingSecond,
+      "Stuns": env.stuns,
     });
-  });
+    let bin = path.join(app.getPath('exe'), '..', env.roomBinName);
+    let cmd = `${bin} -setup='${setup}'`;
+    console.log(`exec: ${cmd}`);
+    exec(cmd);
+  }).catch(console.log.bind(console));
 }
 startRoom();
 
