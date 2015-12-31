@@ -3,14 +3,14 @@
   "productName": "IC-Client",
   "identifier": "com.gogogocam.ic",
   "description": "Ic client of gogogocam.com",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "author": "empirefox <empirefox@gmain.com>",
   "main": "main.js",
   "config": {
     "target": "development"
   },
   "dependencies": {
-    "jsonfile": "^2.2.3",
+    "jsonfile": ">=2.2.3",
     "rc-socket.js": ">=0.2.7",
     "tree-kill": ">=1.0.0",
     "ws": ">=0.8.1"

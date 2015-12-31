@@ -1,7 +1,9 @@
 <div *ngIf='show'>
-  <ul>
-    <li *ngFor="#camera of list">
-      <input type="checkbox" (change)='onSetRec(camera)' [(ngModel)]='camera.rec' />{{camera.Id}}
+  切换录像
+  <ul class="heroes">
+    <li *ngFor="#camera of list" (click)='onSetRec(camera)'>
+      <input type="checkbox" [ngModel]='camera.rec' [disabled]='camera.waiting'/>{{camera.Id}}
     </li>
   </ul>
+  <hr/>
 </div>

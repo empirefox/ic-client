@@ -1,10 +1,9 @@
 'use strict';
 import {Component, View, NgZone} from 'angular2/core';
-import {NgFor, NgIf} from 'angular2/common';
+import {NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/common';
 
 let ipc = require('electron').ipcRenderer;
 
-/*start-non-standard*/
 @Component({
   selector: 'cameras',
   appInjector: [NgZone],
@@ -13,9 +12,8 @@ let ipc = require('electron').ipcRenderer;
 
 @View({
   templateUrl: 'components/cameras/cameras.html',
-  directives: [NgFor, NgIf],
+  directives: [NgFor, NgIf, FORM_DIRECTIVES],
 })
-/*end-non-standard*/
 
 export class Cameras {
   constructor(zone: NgZone) {
@@ -29,12 +27,15 @@ export class Cameras {
 
         let camera = recObj.camera;
         camera.rec = camera.Rec;
+        camera.waiting = false;
 
         let exist = this.list.find(c => camera.Id === c.Id);
         if (exist) {
           Object.assign(exist, camera);
         } else if (this.ids.find(id => camera.Id === id)) {
           this.list.push(camera);
+        }else {
+          return;
         }
 
         this.cleanList();
@@ -52,6 +53,7 @@ export class Cameras {
   }
 
   onSetRec(c) {
+    c.waiting = true;
     ipc.send('set-rec', {
       id: c.Id,
       rec: c.rec,

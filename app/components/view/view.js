@@ -28,5 +28,5 @@ export class MainView {
   }
 }
 
-// enableProdMode();
+enableProdMode();
 bootstrap(MainView, [HTTP_PROVIDERS]).catch(err => console.error(err));
