@@ -53,7 +53,11 @@ export class Cameras {
   }
 
   onSetRec(c) {
+    if(c.waiting){
+      return;
+    }
     c.waiting = true;
+    c.rec = !c.rec;
     ipc.send('set-rec', {
       id: c.Id,
       rec: c.rec,

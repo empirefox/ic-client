@@ -63,7 +63,7 @@ function quit(type) {
       conn.close();
     }
     process.exit();
-  }, 500);
+  }, 10000);
 }
 
 function startRoom() {
@@ -224,7 +224,7 @@ ipcMain.on('get-cameras', () => {
 ipcMain.on('set-rec', (event, arg) => {
   utils.ensureDir(recDir).then(() => {
     sendToRoom({
-      type: arg.rec ? 'SetRecOff' : 'SetRecOn',
+      type: arg.rec ? 'SetRecOn' : 'SetRecOff',
       content: arg.id,
     });
   });
